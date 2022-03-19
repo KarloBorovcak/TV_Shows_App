@@ -7,8 +7,6 @@ class TvShowsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: LoginScreen()),
-    );
+    return const MaterialApp(home: Scaffold(body: LoginScreen(), backgroundColor: Color.fromRGBO(61, 29, 114, 1)));
   }
 }
