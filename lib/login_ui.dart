@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tv_shows/gen/assets.gen.dart';
 import 'package:tv_shows/welcome_screen.dart';
 
 class LoginUI extends StatefulWidget {
@@ -86,8 +87,8 @@ class _LoginUIState extends State<LoginUI> {
                 labelStyle: const TextStyle(color: Colors.white),
                 suffixIcon: IconButton(
                   icon: isHidden
-                      ? SvgPicture.asset('./assets/images/Trailing_Icon.svg')
-                      : SvgPicture.asset('./assets/images/Trailing_Icon_crossed.svg'),
+                      ? SvgPicture.asset(Assets.images.trailingIcon.path)
+                      : SvgPicture.asset(Assets.images.trailingIconCrossed.path),
                   onPressed: () => {setState(() => isHidden = !isHidden)},
                 )),
           )),

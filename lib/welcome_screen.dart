@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tv_shows/gen/assets.gen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   final String email;
@@ -13,7 +14,7 @@ class WelcomeScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset('assets/images/Welcome_icon.svg'),
+              SvgPicture.asset(Assets.images.welcomeIcon.path),
               Padding(
                   padding: const EdgeInsets.all(31),
                   child: Text('Welcome, $email!',

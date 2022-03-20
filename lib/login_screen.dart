@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tv_shows/gen/assets.gen.dart';
 import 'package:tv_shows/login_ui.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,17 +35,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Stack(
                   children: [
                     Positioned(
-                      child: SvgPicture.asset('./assets/images/Top_left_illustration.svg', fit: BoxFit.contain),
+                      child: SvgPicture.asset(Assets.images.topLeftIllustration.path),
                       left: 0,
                       top: 0,
                     ),
                     Positioned(
                       right: 0,
                       top: 0,
-                      child: SvgPicture.asset('./assets/images/Top_right_illustration.svg', fit: BoxFit.contain),
+                      child: SvgPicture.asset(Assets.images.topRightIllustration.path),
                     ),
                     Positioned(
-                      child: SvgPicture.asset('./assets/images/Logo_Horizontal_White.svg', fit: BoxFit.contain),
+                      child: SvgPicture.asset(Assets.images.logoHorizontalWhite.path),
                       top: 180,
                       left: 40,
                     )
