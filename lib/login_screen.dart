@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:tv_shows/login_ui.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -9,114 +11,47 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late TextEditingController emailController;
-  late TextEditingController passwordController;
-  bool emailNotEmpty = false;
-  bool passwordNotEmpty = false;
-  bool isHidden = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    emailController = TextEditingController();
-    passwordController = TextEditingController();
-
-    emailController.addListener(() {
-      final emailNotEmpty = emailController.text.isNotEmpty;
-
-      setState(() => this.emailNotEmpty = emailNotEmpty);
-    });
-
-    passwordController.addListener(() {
-      final passwordNotEmpty = passwordController.text.isNotEmpty;
-
-      setState(() => this.passwordNotEmpty = passwordNotEmpty);
-    });
-  }
-
-  @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Stack(
-          children: [
-            Positioned(
-              child: SvgPicture.asset('./assets/images/Top_left_illustration.svg'),
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    return SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
+        child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: MediaQuery.of(context).size.width,
+              minHeight: MediaQuery.of(context).size.height,
             ),
-            Positioned(
-              left: 0,
-              child: SvgPicture.asset('./assets/images/Top_right_illustration.svg'),
-            ),
-            SvgPicture.asset('./assets/images/Logo_Horizontal_White.svg')
-          ],
-        ),
-        const Text(
-          'Login',
-          style: TextStyle(color: Colors.white, fontSize: 34),
-          textAlign: TextAlign.start,
-        ),
-        const Text(
-          'In order to continue please log in.',
-          style: TextStyle(color: Colors.white, fontSize: 17),
-        ),
-        TextField(
-          style: const TextStyle(color: Colors.white),
-          autocorrect: false,
-          controller: emailController,
-          decoration: const InputDecoration(
-              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-              labelText: 'Email',
-              labelStyle: TextStyle(color: Colors.white)),
-        ),
-        TextField(
-          style: const TextStyle(color: Colors.white),
-          autocorrect: false,
-          obscureText: isHidden,
-          controller: passwordController,
-          decoration: InputDecoration(
-              enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-              focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-              labelText: 'Password',
-              labelStyle: const TextStyle(color: Colors.white),
-              suffixIcon: IconButton(
-                icon: isHidden
-                    ? SvgPicture.asset('./assets/images/Trailing_Icon.svg')
-                    : SvgPicture.asset('./assets/images/Trailing_Icon_crossed.svg'),
-                onPressed: () => {setState(() => isHidden = !isHidden)},
-              )),
-        ),
-        ElevatedButton(
-          child: Text('Login',
-              style: TextStyle(
-                  color: (emailNotEmpty && passwordNotEmpty)
-                      ? const Color.fromRGBO(61, 29, 114, 1)
-                      : const Color.fromRGBO(255, 255, 255, 0.8))),
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                if (states.contains(MaterialState.disabled)) {
-                  return const Color.fromRGBO(187, 187, 187, 0.8);
-                } else {
-                  return Colors.white;
-                }
-              }),
-              overlayColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(61, 29, 114, 0.3)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(21.5),
-              ))),
-          onPressed: (emailNotEmpty && passwordNotEmpty) ? () {} : null,
-        )
-      ],
-    );
+            child: IntrinsicHeight(
+                child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                    child: Stack(
+                  children: [
+                    Positioned(
+                      child: SvgPicture.asset('./assets/images/Top_left_illustration.svg', fit: BoxFit.contain),
+                      left: 0,
+                      top: 0,
+                    ),
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: SvgPicture.asset('./assets/images/Top_right_illustration.svg', fit: BoxFit.contain),
+                    ),
+                    Positioned(
+                      child: SvgPicture.asset('./assets/images/Logo_Horizontal_White.svg', fit: BoxFit.contain),
+                      top: 180,
+                      left: 40,
+                    )
+                  ],
+                )),
+                const LoginUI(),
+              ],
+            ))));
   }
 }
