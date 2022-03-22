@@ -1,10 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:tv_shows/gen/assets.gen.dart';
-
-class ReviewProvider extends ChangeNotifier {
-  Map<String, List> get reviews => Review.allReviews;
-  int get reviewCount => Review.allReviews.length;
-}
 
 class Review {
   String? comment;
