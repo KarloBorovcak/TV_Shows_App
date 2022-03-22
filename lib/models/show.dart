@@ -1,10 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:tv_shows/gen/assets.gen.dart';
-
-class ShowsProvider extends ChangeNotifier {
-  int get showCount => Show.allShows.length;
-  List<Show> get showGetShows => Show.allShows;
-}
 
 class Show {
   String name;
