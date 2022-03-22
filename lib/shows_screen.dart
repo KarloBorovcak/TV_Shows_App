@@ -54,7 +54,7 @@ class _ShowsScreenState extends State<ShowsScreen> {
                     ))
               ],
             )
-          : const SingleChildScrollView(child: ShowList()),
+          : const ShowList(),
     );
   }
 }

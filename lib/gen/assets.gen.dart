@@ -36,6 +36,10 @@ class $AssetsImagesGen {
   SvgGenImage get welcomeIcon =>
       const SvgGenImage('assets/images/Welcome_icon.svg');
 
+  /// File path: assets/images/ic_office.png
+  AssetGenImage get icOffice =>
+      const AssetGenImage('assets/images/ic_office.png');
+
   /// File path: assets/images/ic_profile_placeholder.png
   AssetGenImage get icProfilePlaceholder =>
       const AssetGenImage('assets/images/ic_profile_placeholder.png');
