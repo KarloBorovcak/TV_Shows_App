@@ -35,6 +35,30 @@ class $AssetsImagesGen {
   /// File path: assets/images/Welcome_icon.svg
   SvgGenImage get welcomeIcon =>
       const SvgGenImage('assets/images/Welcome_icon.svg');
+
+  /// File path: assets/images/ic_office.png
+  AssetGenImage get icOffice =>
+      const AssetGenImage('assets/images/ic_office.png');
+
+  /// File path: assets/images/ic_profile_placeholder.png
+  AssetGenImage get icProfilePlaceholder =>
+      const AssetGenImage('assets/images/ic_profile_placeholder.png');
+
+  /// File path: assets/images/ic_shows_empty_state.svg
+  SvgGenImage get icShowsEmptyState =>
+      const SvgGenImage('assets/images/ic_shows_empty_state.svg');
+
+  /// File path: assets/images/krv_nije_voda_2.png
+  AssetGenImage get krvNijeVoda2 =>
+      const AssetGenImage('assets/images/krv_nije_voda_2.png');
+
+  /// File path: assets/images/stranger_things_poster 2.png
+  AssetGenImage get strangerThingsPoster2 =>
+      const AssetGenImage('assets/images/stranger_things_poster 2.png');
+
+  /// File path: assets/images/the_office 1.png
+  AssetGenImage get theOffice1 =>
+      const AssetGenImage('assets/images/the_office 1.png');
 }
 
 class Assets {
