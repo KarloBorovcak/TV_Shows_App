@@ -4,7 +4,22 @@ import 'package:tv_shows/gen/assets.gen.dart';
 import 'package:tv_shows/screens/login/welcome_screen.dart';
 
 class LoginUI extends StatefulWidget {
-  const LoginUI({Key? key}) : super(key: key);
+  final String title;
+  final String description;
+  final String buttonTitle;
+  final String showOtherButtonTitle; // Will be used for: "Create account" / "Sing in"
+  final VoidCallback buttonPressed;
+  final VoidCallback showOtherButtonPressed;
+
+  const LoginUI(
+      {Key? key,
+      required this.title,
+      required this.description,
+      required this.buttonTitle,
+      required this.showOtherButtonTitle,
+      required this.buttonPressed,
+      required this.showOtherButtonPressed})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoginUIState();
@@ -48,19 +63,19 @@ class _LoginUIState extends State<LoginUI> {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      const Padding(
-        padding: EdgeInsets.all(14),
+      Padding(
+        padding: const EdgeInsets.all(14),
         child: Text(
-          'Login',
-          style: TextStyle(color: Colors.white, fontSize: 34, fontWeight: FontWeight.w900),
+          widget.title,
+          style: const TextStyle(color: Colors.white, fontSize: 34, fontWeight: FontWeight.w900),
           textAlign: TextAlign.start,
         ),
       ),
-      const Padding(
-        padding: EdgeInsets.all(14),
+      Padding(
+        padding: const EdgeInsets.all(14),
         child: Text(
-          'In order to continue please log in.',
-          style: TextStyle(color: Colors.white, fontSize: 17),
+          widget.description,
+          style: const TextStyle(color: Colors.white, fontSize: 17),
         ),
       ),
       Padding(
@@ -77,7 +92,7 @@ class _LoginUIState extends State<LoginUI> {
         ),
       ),
       Padding(
-        padding: const EdgeInsets.fromLTRB(14, 14, 14, 120),
+        padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
         child: TextField(
           style: const TextStyle(color: Colors.white),
           autocorrect: false,
@@ -98,9 +113,19 @@ class _LoginUIState extends State<LoginUI> {
         ),
       ),
       Padding(
+        padding: const EdgeInsets.fromLTRB(14, 0, 14, 70),
+        child: TextButton(
+            style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.transparent)),
+            onPressed: widget.showOtherButtonPressed,
+            child: Text(
+              widget.showOtherButtonTitle,
+              style: const TextStyle(color: Colors.white, decoration: TextDecoration.underline),
+            )),
+      ),
+      Padding(
         padding: const EdgeInsets.all(24),
         child: ElevatedButton(
-          child: Text('Login',
+          child: Text(widget.buttonTitle,
               style: TextStyle(
                   color: (emailNotEmpty && passwordNotEmpty)
                       ? const Color.fromRGBO(61, 29, 114, 1)
@@ -120,7 +145,7 @@ class _LoginUIState extends State<LoginUI> {
               ),
             ),
           ),
-          onPressed: (emailNotEmpty && passwordNotEmpty) ? () => goToNextScreen(context, emailController.text) : null,
+          onPressed: (emailNotEmpty && passwordNotEmpty) ? widget.buttonPressed : null,
         ),
       )
     ]);
