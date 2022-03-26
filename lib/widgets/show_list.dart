@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/screens/shows/show_detail_screen.dart';
+import 'package:tv_shows/utilities/networking_repository.dart';
 
 import '../providers/show_provider.dart';
 
@@ -10,7 +11,7 @@ class ShowList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ShowsProvider>(
-      create: ((context) => ShowsProvider()),
+      create: ((context) => ShowsProvider(context.read<NetworkingRepository>())),
       child: _ShowListWidget(),
     );
   }
@@ -44,7 +45,7 @@ class _ShowListWidget extends StatelessWidget {
                   ),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
-                      child: Text(showArray[index].name,
+                      child: Text(showArray[index].title,
                           style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20))),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 5, 10, 20),

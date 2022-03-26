@@ -1,43 +1,17 @@
-import 'package:tv_shows/gen/assets.gen.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'show.g.dart';
+
+@JsonSerializable(fieldRename: FieldRename.snake)
 class Show {
-  String name;
+  Show(this.title, this.description, this.noOfReviews, this.averageRating, this.imageUrl, this.id);
+  String title;
   String description;
-  int numOfReviews;
+  int noOfReviews;
   double averageRating;
   String imageUrl;
-  static final allShows = [
-    Show(
-        'The Office',
-        'The Office is an American mockumentary sitcom television series that depicts the everyday work lives of office employees in the Scranton, Pennsylvania, branch of the fictional Dunder Mifflin Paper Company. It aired on NBC from March 24, 2005, to May 16, 2013, lasting a total of nine seasons.',
-        3,
-        3.4,
-        Assets.images.icOffice.path),
-    Show('Krv nije voda', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor', 0, 0,
-        Assets.images.krvNijeVoda2.path),
-    Show('Stranger Things', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor', 2, 5,
-        Assets.images.strangerThingsPoster2.path),
-    Show(
-        'The Office',
-        'The Office is an American mockumentary sitcom television series that depicts the everyday work lives of office employees in the Scranton, Pennsylvania, branch of the fictional Dunder Mifflin Paper Company. It aired on NBC from March 24, 2005, to May 16, 2013, lasting a total of nine seasons.',
-        3,
-        3.6,
-        Assets.images.icOffice.path),
-    Show('Krv nije voda', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor', 0, 0,
-        Assets.images.krvNijeVoda2.path),
-    Show('Stranger Things', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor', 2, 5,
-        Assets.images.strangerThingsPoster2.path),
-    Show(
-        'The Office',
-        'The Office is an American mockumentary sitcom television series that depicts the everyday work lives of office employees in the Scranton, Pennsylvania, branch of the fictional Dunder Mifflin Paper Company. It aired on NBC from March 24, 2005, to May 16, 2013, lasting a total of nine seasons.',
-        3,
-        3.6,
-        Assets.images.icOffice.path),
-    Show('Krv nije voda', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor', 0, 0,
-        Assets.images.krvNijeVoda2.path),
-    Show('Stranger Things', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor', 2, 5,
-        Assets.images.strangerThingsPoster2.path)
-  ];
+  int id;
 
-  Show(this.name, this.description, this.numOfReviews, this.averageRating, this.imageUrl);
+  factory Show.fromJson(Map<String, dynamic> json) => _$ShowFromJson(json);
+  Map<String, dynamic> toJson() => _$ShowToJson(this);
 }

@@ -8,8 +8,9 @@ class BaseLoginScreen extends StatelessWidget {
   final String title;
   final String description;
   final String buttonTitle;
+  final bool isLoading;
   final String showOtherButtonTitle; // Will be used for: "Create account" / "Sing in"
-  final VoidCallback buttonPressed;
+  final Function(String email, String password) buttonPressed;
   final VoidCallback showOtherButtonPressed;
 
   const BaseLoginScreen(
@@ -17,6 +18,7 @@ class BaseLoginScreen extends StatelessWidget {
       required this.title,
       required this.description,
       required this.buttonTitle,
+      required this.isLoading,
       required this.showOtherButtonTitle,
       required this.buttonPressed,
       required this.showOtherButtonPressed})
@@ -66,6 +68,7 @@ class BaseLoginScreen extends StatelessWidget {
                   title: title,
                   description: description,
                   buttonTitle: buttonTitle,
+                  isLoading: isLoading,
                   showOtherButtonTitle: showOtherButtonTitle,
                   buttonPressed: buttonPressed,
                   showOtherButtonPressed: showOtherButtonPressed),

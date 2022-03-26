@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/models/show.dart';
+import 'package:tv_shows/utilities/networking_repository.dart';
 
 import '../../providers/review_provider.dart';
 
@@ -18,7 +19,7 @@ class ShowDetailScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
         title: Text(
-          show.name,
+          show.title,
           style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 24),
         ),
       ),
@@ -83,7 +84,8 @@ class ReviewList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ReviewProvider>(
-        create: ((context) => ReviewProvider()), child: _ReviewListWidget(show));
+        create: ((context) => ReviewProvider(context.read<NetworkingRepository>(), show.id)),
+        child: _ReviewListWidget(show));
   }
 }
 
@@ -94,9 +96,9 @@ class _ReviewListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final reviews = context.watch<ReviewProvider>();
-    final reviewsArray = reviews.reviews[show.name];
+    final reviewsArray = reviews.reviewList;
 
-    if (reviewsArray!.isEmpty) {
+    if (reviewsArray.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(40),
         child: Text(
@@ -110,7 +112,7 @@ class _ReviewListWidget extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 6),
         child: Text(
-          '${show.numOfReviews} REVIEWS, ${show.averageRating} AVERAGE',
+          '${show.noOfReviews} REVIEWS, ${show.averageRating} AVERAGE',
           textAlign: TextAlign.start,
           style: const TextStyle(color: Color(0xff999999), fontSize: 14),
         ),
@@ -136,11 +138,11 @@ class _ReviewListWidget extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Image.asset(reviewsArray[index].imageUrl),
+                if (reviewsArray[index].user.imageUrl != null) Image.network(reviewsArray[index].user.imageUrl!),
                 SizedBox(
                   width: 200,
                   child: Text(
-                    reviewsArray[index].userEmail,
+                    reviewsArray[index].user.email,
                     style: const TextStyle(color: Color(0xff52368c)),
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
@@ -158,7 +160,7 @@ class _ReviewListWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 17, 0, 0),
                   child: Text(
-                    reviewsArray[index].comment,
+                    reviewsArray[index].comment!,
                     textAlign: TextAlign.start,
                   ),
                 )

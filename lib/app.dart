@@ -15,13 +15,13 @@ class TvShowsApp extends StatelessWidget {
           create: (context) => AuthInfoHolder(),
         ),
         Provider(
-          create: (context) => NetworkingRepository(context.watch<AuthInfoHolder>()),
-        )
+          create: (context) => NetworkingRepository(context.read<AuthInfoHolder>()),
+        ),
       ],
       child: const MaterialApp(
         home: Scaffold(
           body: LoginScreen(),
-          backgroundColor: Color(0xff52368c),
+          backgroundColor: Color(0xff3d1d72),
         ),
       ),
     );
