@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/models/register_info.dart';
-import 'package:tv_shows/providers/login_provider.dart';
 import 'package:tv_shows/providers/provider_listener.dart';
 import 'package:tv_shows/providers/register_provider.dart';
 import 'package:tv_shows/screens/login/base_login_screen.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
 
-import '../../models/user.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -17,7 +15,7 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => RegisterProvider(context.read<NetworkingRepository>()),
-      child: ConsumerListener<LoginProvider>(
+      child: ConsumerListener<RegisterProvider>(
         builder: ((context, provider) => const _RegisterScreen()),
         listener: (context, provider) {
           provider.state.whenOrNull(

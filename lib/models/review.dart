@@ -9,7 +9,7 @@ class Review {
 
   String? comment;
   int rating;
-  int id;
+  String id;
   User user;
 
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);

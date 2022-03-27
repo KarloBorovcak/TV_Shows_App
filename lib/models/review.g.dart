@@ -10,7 +10,7 @@ Review _$ReviewFromJson(Map<String, dynamic> json) => Review(
       json['comment'] as String?,
       json['rating'] as int,
       User.fromJson(json['user'] as Map<String, dynamic>),
-      json['id'] as int,
+      json['id'] as String,
     );
 
 Map<String, dynamic> _$ReviewToJson(Review instance) => <String, dynamic>{

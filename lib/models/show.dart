@@ -10,7 +10,7 @@ class Show {
   int noOfReviews;
   double averageRating;
   String imageUrl;
-  int id;
+  String id;
 
   factory Show.fromJson(Map<String, dynamic> json) => _$ShowFromJson(json);
   Map<String, dynamic> toJson() => _$ShowToJson(this);

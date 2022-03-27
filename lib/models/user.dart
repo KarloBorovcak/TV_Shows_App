@@ -5,7 +5,7 @@ part 'user.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class User {
   User(this.id, this.email, this.imageUrl);
-  final int id;
+  final String id;
   final String email;
   final String? imageUrl;
 

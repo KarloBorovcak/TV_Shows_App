@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:tv_shows/models/register_info.dart';
 import 'package:tv_shows/models/review.dart';
@@ -29,30 +27,26 @@ class NetworkingRepository {
   Future<User> registerUser(RegisterInfo registerInfo) async {
     final response = await _dio.post('/users', data: registerInfo.toJson());
     authInfoHolder.authInfo = AuthInfo.fromHeaderMap(response.headers.map);
-    final json = jsonDecode(response.data);
-    return User.fromJson(json);
+    return User.fromJson(response.data['user']);
   }
 
   Future<User> signInUser(SignInInfo signInInfo) async {
     final response = await _dio.post('/users/sign_in', data: signInInfo.toJson());
     authInfoHolder.authInfo = AuthInfo.fromHeaderMap(response.headers.map);
-    final json = jsonDecode(response.data);
-    return User.fromJson(json);
+    return User.fromJson(response.data['user']);
   }
 
   Future<List<Show>> fetchShows() async {
     final response = await _dio.get('/shows');
-    final json = jsonDecode(response.data);
-    var pomList = json['shows'];
+    var pomList = response.data['shows'];
 
-    return pomList.map((json) => Show.fromJson(json));
+    return (pomList as List).map((json) => Show.fromJson(json)).toList();
   }
 
-  Future<List<Review>> fetchReviews(int id) async {
-    final response = await _dio.post('/show/$id/reviews');
-    final json = jsonDecode(response.data);
-    var pomList = json['reviews'];
+  Future<List<Review>> fetchReviews(String id) async {
+    final response = await _dio.get('/shows/$id/reviews');
+    var pomList = response.data['reviews'];
 
-    return pomList.map((json) => Review.fromJson(json));
+    return (pomList as List).map((json) => Review.fromJson(json)).toList();
   }
 }

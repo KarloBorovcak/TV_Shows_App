@@ -12,7 +12,7 @@ Show _$ShowFromJson(Map<String, dynamic> json) => Show(
       json['no_of_reviews'] as int,
       (json['average_rating'] as num).toDouble(),
       json['image_url'] as String,
-      json['id'] as int,
+      json['id'] as String,
     );
 
 Map<String, dynamic> _$ShowToJson(Show instance) => <String, dynamic>{

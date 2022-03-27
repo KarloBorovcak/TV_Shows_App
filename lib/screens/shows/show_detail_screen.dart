@@ -3,7 +3,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/models/show.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
+import 'package:tv_shows/widgets/user_icon.dart';
 
+import '../../providers/provider_listener.dart';
 import '../../providers/review_provider.dart';
 
 class ShowDetailScreen extends StatelessWidget {
@@ -32,8 +34,13 @@ class ShowDetailScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(23, 0, 26, 0),
                 child: Container(
+                  width: 200,
+                  height: 300,
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5.0), color: Colors.white),
-                  child: Image.asset(show.imageUrl),
+                  child: Image.network(
+                    show.imageUrl,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
               Padding(
@@ -84,8 +91,21 @@ class ReviewList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ReviewProvider>(
-        create: ((context) => ReviewProvider(context.read<NetworkingRepository>(), show.id)),
-        child: _ReviewListWidget(show));
+      create: ((context) => ReviewProvider(context.read<NetworkingRepository>(), show.id)),
+      child: ConsumerListener<ReviewProvider>(
+          listener: (context, provider) {
+            provider.state.whenOrNull(
+                loading: () => const Center(
+                      child: Expanded(
+                        child: CircularProgressIndicator(
+                          color: Color(0xff3d1d72),
+                        ),
+                      ),
+                    ),
+                failure: (error) => Builder(builder: (context) => Text(error.toString())));
+          },
+          builder: (context, provider) => _ReviewListWidget(show)),
+    );
   }
 }
 
@@ -138,7 +158,11 @@ class _ReviewListWidget extends StatelessWidget {
             padding: const EdgeInsets.all(24),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                if (reviewsArray[index].user.imageUrl != null) Image.network(reviewsArray[index].user.imageUrl!),
+                reviewsArray[index].user.imageUrl != null
+                    ? UserIcon(url: reviewsArray[index].user.imageUrl!)
+                    : Container(
+                        width: 40,
+                      ),
                 SizedBox(
                   width: 200,
                   child: Text(

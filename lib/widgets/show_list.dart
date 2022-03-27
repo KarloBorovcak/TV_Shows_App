@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tv_shows/providers/provider_listener.dart';
 import 'package:tv_shows/screens/shows/show_detail_screen.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
 
@@ -12,7 +13,19 @@ class ShowList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ShowsProvider>(
       create: ((context) => ShowsProvider(context.read<NetworkingRepository>())),
-      child: _ShowListWidget(),
+      child: ConsumerListener<ShowsProvider>(
+          listener: (context, provider) {
+            provider.state.whenOrNull(
+                loading: () => const Center(
+                      child: Expanded(
+                        child: CircularProgressIndicator(
+                          color: Color(0xff3d1d72),
+                        ),
+                      ),
+                    ),
+                failure: (error) => Builder(builder: (context) => Text(error.toString())));
+          },
+          builder: (context, provider) => _ShowListWidget()),
     );
   }
 }
@@ -22,6 +35,7 @@ class _ShowListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final shows = context.watch<ShowsProvider>();
     final showArray = shows.showGetShows;
+
     return ListView.builder(
         itemCount: shows.showCount,
         itemBuilder: (context, index) {
@@ -40,8 +54,23 @@ class _ShowListWidget extends StatelessWidget {
                   )
                 ]),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                  Image.asset(
-                    showArray[index].imageUrl,
+                  SizedBox(
+                    height: 190,
+                    width: 340,
+                    child: Image.network(
+                      showArray[index].imageUrl,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
