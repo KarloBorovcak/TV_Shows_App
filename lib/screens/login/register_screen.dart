@@ -26,7 +26,7 @@ class RegisterScreen extends StatelessWidget {
                   actions: [
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
                         },
                         child: const Text("Ok"))
                   ],
