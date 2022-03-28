@@ -31,7 +31,7 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: const Text("Dissmis"))
+                        child: const Text("Dismiss"))
                   ],
                   title: const Text('Error'),
                   content: Text(error.toString()),

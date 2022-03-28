@@ -32,7 +32,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Padding(
               padding: const EdgeInsets.all(31),
               child: Text(
-                'Welocme, ${widget.email}!',
+                'Welcome, ${widget.email}!',
                 style: const TextStyle(color: Color.fromRGBO(128, 128, 128, 1), fontSize: 17),
               ),
             )
