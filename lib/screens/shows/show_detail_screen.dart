@@ -5,7 +5,6 @@ import 'package:tv_shows/models/show.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
 import 'package:tv_shows/widgets/user_icon.dart';
 
-import '../../providers/provider_listener.dart';
 import '../../providers/review_provider.dart';
 
 class ShowDetailScreen extends StatelessWidget {
@@ -92,19 +91,23 @@ class ReviewList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ReviewProvider>(
       create: ((context) => ReviewProvider(context.read<NetworkingRepository>(), show.id)),
-      child: ConsumerListener<ReviewProvider>(
-          listener: (context, provider) {
-            provider.state.whenOrNull(
-                loading: () => const Center(
-                      child: Expanded(
-                        child: CircularProgressIndicator(
-                          color: Color(0xff3d1d72),
-                        ),
-                      ),
+      child: Consumer<ReviewProvider>(
+        builder: (context, provider, _) => provider.state.when(
+            initial: () => const Center(
+                  child: Expanded(
+                    child: CircularProgressIndicator(color: Color(0xff3d1d72)),
+                  ),
+                ),
+            success: (result) => _ReviewListWidget(show),
+            loading: () => const Center(
+                  child: Expanded(
+                    child: CircularProgressIndicator(
+                      color: Color(0xff3d1d72),
                     ),
-                failure: (error) => Builder(builder: (context) => Text(error.toString())));
-          },
-          builder: (context, provider) => _ReviewListWidget(show)),
+                  ),
+                ),
+            failure: (error) => Builder(builder: (context) => Text(error.toString()))),
+      ),
     );
   }
 }

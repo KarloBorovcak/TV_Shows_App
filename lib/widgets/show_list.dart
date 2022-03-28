@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tv_shows/providers/provider_listener.dart';
 import 'package:tv_shows/screens/shows/show_detail_screen.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
 
@@ -13,19 +12,23 @@ class ShowList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ShowsProvider>(
       create: ((context) => ShowsProvider(context.read<NetworkingRepository>())),
-      child: ConsumerListener<ShowsProvider>(
-          listener: (context, provider) {
-            provider.state.whenOrNull(
-                loading: () => const Center(
-                      child: Expanded(
-                        child: CircularProgressIndicator(
-                          color: Color(0xff3d1d72),
-                        ),
-                      ),
+      child: Consumer<ShowsProvider>(
+        builder: (context, provider, _) => provider.state.when(
+            initial: () => const Center(
+                  child: Expanded(
+                    child: CircularProgressIndicator(color: Color(0xff3d1d72)),
+                  ),
+                ),
+            success: (result) => _ShowListWidget(),
+            loading: () => const Center(
+                  child: Expanded(
+                    child: CircularProgressIndicator(
+                      color: Color(0xff3d1d72),
                     ),
-                failure: (error) => Builder(builder: (context) => Text(error.toString())));
-          },
-          builder: (context, provider) => _ShowListWidget()),
+                  ),
+                ),
+            failure: (error) => Builder(builder: (context) => Text(error.toString()))),
+      ),
     );
   }
 }
