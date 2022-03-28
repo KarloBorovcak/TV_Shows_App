@@ -1,61 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:tv_shows/gen/assets.gen.dart';
-import 'package:tv_shows/widgets/login_ui.dart';
+import 'package:provider/provider.dart';
+import 'package:tv_shows/models/signin_info.dart';
+import 'package:tv_shows/providers/login_provider.dart';
+import 'package:tv_shows/screens/login/base_login_screen.dart';
+import 'package:tv_shows/screens/login/welcome_screen.dart';
+import 'package:tv_shows/utilities/networking_repository.dart';
 
-class LoginScreen extends StatefulWidget {
+import '../../providers/provider_listener.dart';
+import 'register_screen.dart';
+
+class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _LoginScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => LoginProvider(context.read<NetworkingRepository>()),
+      child: ConsumerListener<LoginProvider>(
+        builder: (context, provider) => const _LoginScreen(),
+        listener: (context, provider) {
+          provider.state.whenOrNull(
+            success: (result) => Navigator.of(context)
+                .pushReplacement(MaterialPageRoute(builder: (context) => WelcomeScreen(email: result.email))),
+            failure: (error) => showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Dissmis"))
+                  ],
+                  title: const Text('Error'),
+                  content: Text(error.toString()),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreen extends StatelessWidget {
+  const _LoginScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    return SingleChildScrollView(
-      physics: const ClampingScrollPhysics(),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: MediaQuery.of(context).size.width,
-          minHeight: MediaQuery.of(context).size.height,
-        ),
-        child: IntrinsicHeight(
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Stack(
-                  children: [
-                    Positioned(
-                      child: SvgPicture.asset(Assets.images.topLeftIllustration.path),
-                      left: 0,
-                      top: 0,
-                    ),
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: SvgPicture.asset(Assets.images.topRightIllustration.path),
-                    ),
-                    Positioned(
-                      child: SvgPicture.asset(Assets.images.logoHorizontalWhite.path),
-                      top: 180,
-                      left: 40,
-                    )
-                  ],
-                ),
-              ),
-              const LoginUI(),
-            ],
-          ),
-        ),
+    final provider = context.watch<LoginProvider>();
+
+    return Scaffold(
+      backgroundColor: const Color(0xff3d1d72),
+      body: BaseLoginScreen(
+        title: 'Login',
+        description: 'In order to continue please log in.',
+        buttonTitle: 'Login',
+        isLoading: provider.state.maybeWhen(orElse: () => false, loading: () => true),
+        showOtherButtonTitle: 'Create account',
+        buttonPressed: (email, password) {
+          provider.didSelectLoginUser(SignInInfo(email, password));
+        },
+        showOtherButtonPressed: () {
+          final route = MaterialPageRoute(builder: (_) => const RegisterScreen());
+          Navigator.of(context).pushReplacement(route);
+        },
       ),
     );
   }
