@@ -104,7 +104,7 @@ class _WriteReviewScreenState extends State<_WriteReviewScreen> {
             padding: const EdgeInsets.fromLTRB(10, 10, 0, 40),
             child: RatingBar.builder(
               initialRating: 3,
-              minRating: 0.5,
+              minRating: 1,
               direction: Axis.horizontal,
               allowHalfRating: true,
               itemCount: 5,
