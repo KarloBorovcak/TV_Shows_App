@@ -14,7 +14,7 @@ class ReviewProvider extends RequestProvider<List<Review>> {
   List<Review> get reviews => reviewList;
   int get reviewCount => reviewList.length;
 
-  void fetchReviews(String id) async {
+  void fetchReviews(String id) {
     executeRequest(requestBuilder: () async => reviewList = await _repository.fetchReviews(id));
   }
 }

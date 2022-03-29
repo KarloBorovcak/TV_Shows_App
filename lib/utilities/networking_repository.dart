@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:tv_shows/models/register_info.dart';
 import 'package:tv_shows/models/review.dart';
 import 'package:tv_shows/models/signin_info.dart';
+import 'package:tv_shows/models/submit_review.dart';
 import 'package:tv_shows/utilities/auth_info.dart';
 import 'package:tv_shows/utilities/auth_info_holder.dart';
 import 'package:tv_shows/utilities/auth_info_interceptor.dart';
@@ -48,5 +49,9 @@ class NetworkingRepository {
     var pomList = response.data['reviews'];
 
     return (pomList as List).map((json) => Review.fromJson(json)).toList();
+  }
+
+  void submitReview(SubmitReview review) async {
+    await _dio.post('/reviews', data: review.toJson());
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/models/show.dart';
+import 'package:tv_shows/screens/write_review_screen.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
 import 'package:tv_shows/widgets/review_widget.dart';
 
@@ -17,28 +18,21 @@ class ShowDetailScreen extends StatelessWidget {
       create: ((context) => ReviewProvider(context.read<NetworkingRepository>(), show.id)),
       child: Consumer<ReviewProvider>(
         builder: (context, provider, _) => provider.state.when(
-            initial: () => const Center(
-                  child: Expanded(
-                    child: CircularProgressIndicator(color: Color(0xff3d1d72)),
-                  ),
-                ),
-            success: (result) => _ShowDetailScreen(show: show),
-            loading: () => const Center(
-                  child: Expanded(
-                    child: CircularProgressIndicator(
-                      color: Color(0xff3d1d72),
-                    ),
-                  ),
-                ),
-            failure: (error) => Builder(builder: (context) => Text(error.toString()))),
+            initial: () => _ShowDetailScreen(
+                show: show, widget: const Center(child: CircularProgressIndicator(color: Color(0xff52368c)))),
+            loading: () => _ShowDetailScreen(
+                show: show, widget: const Center(child: CircularProgressIndicator(color: Color(0xff52368c)))),
+            success: (result) => _ShowDetailScreen(show: show, widget: null),
+            failure: (error) => _ShowDetailScreen(show: show, widget: Text(error.toString()))),
       ),
     );
   }
 }
 
 class _ShowDetailScreen extends StatelessWidget {
-  const _ShowDetailScreen({Key? key, required this.show}) : super(key: key);
+  const _ShowDetailScreen({Key? key, required this.show, required this.widget}) : super(key: key);
   final Show show;
+  final Widget? widget;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +44,7 @@ class _ShowDetailScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            centerTitle: true,
             backgroundColor: Colors.grey,
             expandedHeight: 300,
             pinned: true,
@@ -103,21 +98,23 @@ class _ShowDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              return Column(
-                children: [
-                  ReviewWidget(review: reviewsArray[index]),
-                  if (index != reviewsArray.length - 1)
-                    const Divider(
-                      color: Color(0xffC8C7CC),
-                      indent: 24,
-                      endIndent: 24,
-                    )
-                ],
-              );
-            }, childCount: reviewsArray.length),
-          ),
+          widget == null
+              ? SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return Column(
+                      children: [
+                        ReviewWidget(review: reviewsArray[index]),
+                        if (index != reviewsArray.length - 1)
+                          const Divider(
+                            color: Color(0xffC8C7CC),
+                            indent: 24,
+                            endIndent: 24,
+                          )
+                      ],
+                    );
+                  }, childCount: reviewsArray.length),
+                )
+              : SliverToBoxAdapter(child: widget)
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -134,7 +131,16 @@ class _ShowDetailScreen extends StatelessWidget {
                 ),
               ),
             ),
-            onPressed: null,
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (_) => ChangeNotifierProvider<ReviewProvider>.value(
+                    value: context.read<ReviewProvider>(), child: WriteReviewScreen(showId: show.id)),
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+                isScrollControlled: true,
+              );
+            },
           ),
         ),
       ),
