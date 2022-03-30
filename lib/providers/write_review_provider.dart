@@ -12,6 +12,6 @@ class WriteReviewProvider extends RequestProvider<void> {
 
   void writeReview(SubmitReview review, int id) {
     executeRequest(requestBuilder: () async => _repository.submitReview(review));
-    executeRequest(requestBuilder: (() async => provider.fetchReviews(id.toString())));
+    provider.fetchReviews(id.toString());
   }
 }
