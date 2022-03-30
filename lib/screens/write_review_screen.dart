@@ -26,7 +26,10 @@ class WriteReviewScreen extends StatelessWidget {
         ),
         listener: (context, provider) {
           provider.state.whenOrNull(
-            success: (result) => Navigator.of(context).pop(),
+            success: (result) {
+              provider.reviewProvider.fetchReviews(showId);
+              Navigator.of(context).pop();
+            },
             failure: (error) => showDialog(
               context: context,
               builder: (context) {
