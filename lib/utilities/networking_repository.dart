@@ -51,7 +51,7 @@ class NetworkingRepository {
     return (pomList as List).map((json) => Review.fromJson(json)).toList();
   }
 
-  void submitReview(SubmitReview review) async {
+  Future<void> submitReview(SubmitReview review) async {
     await _dio.post('/reviews', data: review.toJson());
   }
 }

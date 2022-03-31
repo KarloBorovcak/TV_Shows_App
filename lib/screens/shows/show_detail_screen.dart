@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/models/show.dart';
-import 'package:tv_shows/screens/write_review_screen.dart';
+import 'package:tv_shows/screens/shows/write_review_screen.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
 import 'package:tv_shows/widgets/review_widget.dart';
 

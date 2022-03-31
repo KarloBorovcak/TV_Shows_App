@@ -5,8 +5,8 @@ import 'package:tv_shows/models/submit_review.dart';
 import 'package:tv_shows/providers/review_provider.dart';
 import 'package:tv_shows/providers/write_review_provider.dart';
 
-import '../providers/provider_listener.dart';
-import '../utilities/networking_repository.dart';
+import '../../providers/provider_listener.dart';
+import '../../utilities/networking_repository.dart';
 
 class WriteReviewScreen extends StatelessWidget {
   const WriteReviewScreen({Key? key, required this.showId}) : super(key: key);
