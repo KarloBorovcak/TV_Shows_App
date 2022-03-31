@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/screens/shows/show_detail_screen.dart';
@@ -60,19 +61,9 @@ class _ShowListWidget extends StatelessWidget {
                   SizedBox(
                     height: 190,
                     width: 340,
-                    child: Image.network(
-                      showArray[index].imageUrl,
+                    child: CachedNetworkImage(
+                      imageUrl: showArray[index].imageUrl,
                       fit: BoxFit.cover,
-                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        );
-                      },
                     ),
                   ),
                   Padding(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +54,7 @@ class _ShowDetailScreen extends StatelessWidget {
                 show.title,
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
               ),
-              background: Image.network(show.imageUrl, fit: BoxFit.fill),
+              background: CachedNetworkImage(imageUrl: show.imageUrl, fit: BoxFit.cover),
             ),
           ),
           SliverToBoxAdapter(
@@ -120,7 +121,7 @@ class _ShowDetailScreen extends StatelessWidget {
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.all(25),
+          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
           child: ElevatedButton(
             child: const Text('Write a review', style: TextStyle(color: Colors.white)),
             style: ButtonStyle(

@@ -13,11 +13,7 @@ class ReviewWidget extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          review.user.imageUrl != null
-              ? UserIcon(url: review.user.imageUrl!)
-              : Container(
-                  width: 40,
-                ),
+          UserIcon(url: review.user.imageUrl),
           SizedBox(
             width: 200,
             child: Text(
