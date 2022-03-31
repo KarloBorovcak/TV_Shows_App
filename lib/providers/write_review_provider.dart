@@ -5,11 +5,13 @@ import 'package:tv_shows/providers/review_provider.dart';
 import '../utilities/networking_repository.dart';
 
 class WriteReviewProvider extends RequestProvider<void> {
-  WriteReviewProvider(this._repository, this.reviewProvider);
+  WriteReviewProvider(this._repository, this.provider);
+
   final NetworkingRepository _repository;
-  final ReviewProvider reviewProvider;
+  final ReviewProvider provider;
 
   void writeReview(SubmitReview review, int id) {
     executeRequest(requestBuilder: () async => _repository.submitReview(review));
+    executeRequest(requestBuilder: (() async => provider.fetchReviews(id.toString())));
   }
 }
