@@ -19,15 +19,9 @@ class ShowDetailScreen extends StatelessWidget {
       child: Consumer<ReviewProvider>(
         builder: (context, provider, _) => provider.state.when(
             initial: () => _ShowDetailScreen(
-                show: show,
-                widget: Container(
-                    padding: const EdgeInsets.all(40),
-                    child: const Center(child: CircularProgressIndicator(color: Color(0xff52368c))))),
+                show: show, widget: const Center(child: CircularProgressIndicator(color: Color(0xff52368c)))),
             loading: () => _ShowDetailScreen(
-                show: show,
-                widget: Container(
-                    padding: const EdgeInsets.all(40),
-                    child: const Center(child: CircularProgressIndicator(color: Color(0xff52368c))))),
+                show: show, widget: const Center(child: CircularProgressIndicator(color: Color(0xff52368c)))),
             success: (result) => _ShowDetailScreen(show: show, widget: null),
             failure: (error) => _ShowDetailScreen(show: show, widget: Text(error.toString()))),
       ),
@@ -120,36 +114,35 @@ class _ShowDetailScreen extends StatelessWidget {
                     );
                   }, childCount: reviewsArray.length),
                 )
-              : SliverToBoxAdapter(child: widget),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Padding(
-              padding: const EdgeInsets.all(25),
-              child: ElevatedButton(
-                child: const Text('Write a review', style: TextStyle(color: Colors.white)),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(const Color(0xff52368c)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(21.5),
-                    ),
-                  ),
+              : SliverToBoxAdapter(child: widget)
+        ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: ElevatedButton(
+            child: const Text('Write a review', style: TextStyle(color: Colors.white)),
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(const Color(0xff52368c)),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(21.5),
                 ),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (_) => ChangeNotifierProvider<ReviewProvider>.value(
-                        value: context.read<ReviewProvider>(), child: WriteReviewScreen(showId: show.id)),
-                    backgroundColor: Colors.white,
-                    shape:
-                        const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
-                    isScrollControlled: true,
-                  );
-                },
               ),
             ),
-          )
-        ],
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (_) => ChangeNotifierProvider<ReviewProvider>.value(
+                    value: context.read<ReviewProvider>(), child: WriteReviewScreen(showId: show.id)),
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+                isScrollControlled: true,
+              );
+            },
+          ),
+        ),
       ),
     );
   }
