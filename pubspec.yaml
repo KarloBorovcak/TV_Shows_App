@@ -52,6 +52,7 @@ dev_dependencies:
   flutter_gen_runner:
     
 
+  flutter_launcher_icons: ^0.9.2
 
   flutter_test:
     sdk: flutter
@@ -66,8 +67,16 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 flutter_gen:
-    integrations:
-      flutter_svg: true
+  integrations:
+    flutter_svg: true
+
+flutter_icons:
+  image_path: 'assets/icons/Icon-1024-1.png'
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  # adaptive_icon_foreground: 'assets/icons/Icon-1024-1.png'
+  # adaptive_icon_background: '#3D1D72'
 
 # The following section is specific to Flutter.
 flutter:
@@ -80,4 +89,5 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/icons/
 
