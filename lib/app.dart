@@ -12,10 +12,10 @@ class TvShowsApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider(
-          create: (context) => AuthInfoHolder(),
+          create: (context) => StorageRepository(),
         ),
         Provider(
-          create: (context) => NetworkingRepository(context.read<AuthInfoHolder>()),
+          create: (context) => NetworkingRepository(context.read<StorageRepository>()),
         ),
       ],
       child: const MaterialApp(

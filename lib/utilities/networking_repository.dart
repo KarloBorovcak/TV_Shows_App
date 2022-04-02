@@ -12,28 +12,28 @@ import '../models/show.dart';
 import '../models/user.dart';
 
 class NetworkingRepository {
-  NetworkingRepository(this.authInfoHolder) {
+  NetworkingRepository(this._storage) {
     final options = BaseOptions(baseUrl: 'https://tv-shows.infinum.academy');
     _dio = Dio(options);
     _dio.interceptors.addAll(
       [
-        AuthInfoInterceptor(authInfoHolder),
+        AuthInfoInterceptor(_storage),
         ErrorExtractorInterceptor(),
       ],
     );
   }
   late final Dio _dio;
-  final AuthInfoHolder authInfoHolder;
+  final StorageRepository _storage;
 
   Future<User> registerUser(RegisterInfo registerInfo) async {
     final response = await _dio.post('/users', data: registerInfo.toJson());
-    authInfoHolder.authInfo = AuthInfo.fromHeaderMap(response.headers.map);
+    _storage.setAuthInfo(AuthInfo.fromHeaderMap(response.headers.map));
     return User.fromJson(response.data['user']);
   }
 
   Future<User> signInUser(SignInInfo signInInfo) async {
     final response = await _dio.post('/users/sign_in', data: signInInfo.toJson());
-    authInfoHolder.authInfo = AuthInfo.fromHeaderMap(response.headers.map);
+    _storage.setAuthInfo(AuthInfo.fromHeaderMap(response.headers.map));
     return User.fromJson(response.data['user']);
   }
 
