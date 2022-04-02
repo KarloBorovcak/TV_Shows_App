@@ -4,6 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tv_shows/utilities/auth_info.dart';
 
+import '../models/user.dart';
+
 class StorageRepository {
   static Future<void> initialize() async {
     await Hive.initFlutter();
@@ -22,6 +24,7 @@ class StorageRepository {
     if (json == null) {
       return null;
     }
+    user = User.fromJson(jsonDecode(json));
     return jsonDecode(json);
   }
 
@@ -30,6 +33,11 @@ class StorageRepository {
   }
   AuthInfo? authInfo;
   late FlutterSecureStorage _storage;
+  late User user;
+
+  User get getUser {
+    return user;
+  }
 
   void setAuthInfo(AuthInfo authInfoSet) async {
     authInfo = authInfoSet;
@@ -52,5 +60,11 @@ class StorageRepository {
     }
 
     return authInfo;
+  }
+
+  void deleteData() async {
+    await _storage.deleteAll();
+    final box = await _box;
+    await box.delete('user');
   }
 }

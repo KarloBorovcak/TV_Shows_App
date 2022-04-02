@@ -1,28 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:tv_shows/widgets/no_shows.dart';
-import 'package:tv_shows/widgets/show_list.dart';
+import 'package:provider/provider.dart';
+import 'package:tv_shows/screens/shows/user_profile_screen.dart';
+import 'package:tv_shows/utilities/storage_repository.dart';
+import 'package:tv_shows/widgets/show_card.dart';
 import 'package:tv_shows/widgets/user_icon.dart';
 
-class ShowsScreen extends StatefulWidget {
+import '../../providers/show_provider.dart';
+import '../../utilities/networking_repository.dart';
+
+class ShowsScreen extends StatelessWidget {
   const ShowsScreen({Key? key}) : super(key: key);
 
   @override
-  State<ShowsScreen> createState() => _ShowsScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ShowsProvider>(
+      create: ((context) => ShowsProvider(context.read<NetworkingRepository>())),
+      child: Consumer<ShowsProvider>(
+        builder: (context, provider, _) => provider.state.maybeWhen(
+            orElse: () => const Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Center(
+                    child: Expanded(
+                      child: CircularProgressIndicator(color: Color(0xff3d1d72)),
+                    ),
+                  ),
+                ),
+            success: (result) => _Showscreen(),
+            failure: (error) => Builder(builder: (context) => Text(error.toString()))),
+      ),
+    );
+  }
 }
 
-class _ShowsScreenState extends State<ShowsScreen> {
-  bool showsHidden = false;
+class _Showscreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final shows = context.watch<ShowsProvider>();
+    final showArray = shows.showGetShows;
+    final storage = context.read<StorageRepository>();
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         actions: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(24, 10, 24, 10),
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
             child: IconButton(
-              onPressed: () => null,
-              icon: const UserIcon(),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (_) => UserProfileScreen(
+                    repository: context.read<NetworkingRepository>(),
+                    storage: context.read<StorageRepository>(),
+                  ),
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+                  isScrollControlled: true,
+                );
+              },
+              icon: UserIcon(url: storage.getUser.imageUrl),
             ),
           ),
         ],
@@ -34,7 +70,15 @@ class _ShowsScreenState extends State<ShowsScreen> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: showsHidden ? const NoShows() : const ShowList(),
+      body: ListView.builder(
+        itemCount: shows.showCount,
+        itemBuilder: (context, index) {
+          return ShowCard(
+            showArray: showArray,
+            index: index,
+          );
+        },
+      ),
     );
   }
 }

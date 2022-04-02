@@ -3,20 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:tv_shows/gen/assets.gen.dart';
 
 class UserIcon extends StatelessWidget {
-  const UserIcon({Key? key, this.url}) : super(key: key);
+  const UserIcon({Key? key, this.url, this.size}) : super(key: key);
 
   final String? url;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
     return url == null
         ? Image.asset(
             Assets.images.icProfilePlaceholder.path,
-            height: 50,
-            width: 50,
+            height: size ?? 50,
+            width: size ?? 50,
+            fit: BoxFit.cover,
           )
         : CircleAvatar(
-            radius: 25,
+            radius: size ?? 25,
             backgroundColor: Colors.transparent,
             backgroundImage: CachedNetworkImageProvider(url!),
           );
