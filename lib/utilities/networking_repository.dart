@@ -4,7 +4,7 @@ import 'package:tv_shows/models/review.dart';
 import 'package:tv_shows/models/signin_info.dart';
 import 'package:tv_shows/models/submit_review.dart';
 import 'package:tv_shows/utilities/auth_info.dart';
-import 'package:tv_shows/utilities/auth_info_holder.dart';
+import 'package:tv_shows/utilities/storage_repository.dart';
 import 'package:tv_shows/utilities/auth_info_interceptor.dart';
 import 'package:tv_shows/utilities/error_extractor_interceptor.dart';
 
@@ -28,12 +28,14 @@ class NetworkingRepository {
   Future<User> registerUser(RegisterInfo registerInfo) async {
     final response = await _dio.post('/users', data: registerInfo.toJson());
     _storage.setAuthInfo(AuthInfo.fromHeaderMap(response.headers.map));
+    _storage.storeJson(response.data['user'], 'user');
     return User.fromJson(response.data['user']);
   }
 
   Future<User> signInUser(SignInInfo signInInfo) async {
     final response = await _dio.post('/users/sign_in', data: signInInfo.toJson());
     _storage.setAuthInfo(AuthInfo.fromHeaderMap(response.headers.map));
+    _storage.storeJson(response.data['user'], 'user');
     return User.fromJson(response.data['user']);
   }
 

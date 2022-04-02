@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:tv_shows/utilities/auth_info_holder.dart';
+import 'package:tv_shows/utilities/storage_repository.dart';
 
 class AuthInfoInterceptor extends Interceptor {
   StorageRepository authInfoHolder;

@@ -1,7 +1,30 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tv_shows/utilities/auth_info.dart';
 
 class StorageRepository {
+  static Future<void> initialize() async {
+    await Hive.initFlutter();
+  }
+
+  final _box = Hive.openBox<String>('userJsonBox');
+
+  Future<void> storeJson(Map<String, dynamic> json, String key) async {
+    final box = await _box;
+    await box.put(key, jsonEncode(json));
+  }
+
+  Future<Map<String, dynamic>?> readJson(String key) async {
+    final box = await _box;
+    final json = box.get(key);
+    if (json == null) {
+      return null;
+    }
+    return jsonDecode(json);
+  }
+
   StorageRepository() {
     _storage = const FlutterSecureStorage();
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tv_shows/widgets/no_shows.dart';
 import 'package:tv_shows/widgets/show_list.dart';
+import 'package:tv_shows/widgets/user_icon.dart';
 
 class ShowsScreen extends StatefulWidget {
   const ShowsScreen({Key? key}) : super(key: key);
@@ -19,19 +20,11 @@ class _ShowsScreenState extends State<ShowsScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 10, 24, 10),
-            child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                        side: const BorderSide(color: Colors.black), borderRadius: BorderRadius.circular(100)),
-                  ),
-                ),
-                onPressed: () => setState(() => showsHidden = !showsHidden),
-                child: showsHidden
-                    ? const Text('Show', style: TextStyle(color: Colors.blue))
-                    : const Text('Hide', style: TextStyle(color: Colors.blue))),
-          )
+            child: IconButton(
+              onPressed: () => null,
+              icon: const UserIcon(),
+            ),
+          ),
         ],
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
