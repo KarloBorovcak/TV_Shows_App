@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:tv_shows/models/register_info.dart';
 import 'package:tv_shows/models/review.dart';
@@ -57,9 +59,20 @@ class NetworkingRepository {
     await _dio.post('/reviews', data: review.toJson());
   }
 
-  Future<User> updateUser(String email) async {
+  Future<User> updateUserEmail(String email) async {
     final json = {'email': email};
-    final response = await _dio.put('/users', data: json);
+    final response = await _dio.put(
+      '/users',
+      data: json,
+    );
+    _storage.setAuthInfo(AuthInfo.fromHeaderMap(response.headers.map));
+    _storage.storeJson(response.data['user'], 'user');
+    return User.fromJson(response.data['user']);
+  }
+
+  Future<User> updateUserImage(File imageFile) async {
+    FormData formData = FormData.fromMap({'image': await MultipartFile.fromFile(imageFile.path)});
+    final response = await _dio.put('/users', data: formData);
     _storage.setAuthInfo(AuthInfo.fromHeaderMap(response.headers.map));
     _storage.storeJson(response.data['user'], 'user');
     return User.fromJson(response.data['user']);

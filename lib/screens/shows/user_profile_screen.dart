@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tv_shows/providers/provider_listener.dart';
 import 'package:tv_shows/providers/user_profile_provider.dart';
 import 'package:tv_shows/screens/login/login_screen.dart';
+import 'package:tv_shows/screens/shows/shows_screen.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
 import 'package:tv_shows/utilities/storage_repository.dart';
 import 'package:tv_shows/widgets/user_icon.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../models/user.dart';
 
@@ -30,12 +34,12 @@ class UserProfileScreen extends StatelessWidget {
                   actions: [
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ShowsScreen()));
                         },
                         child: const Text("Ok"))
                   ],
                   title: const Text('Success'),
-                  content: const Text("Email has been changed!"),
+                  content: const Text("Profile has been updated!"),
                 );
               },
             ),
@@ -72,10 +76,14 @@ class _UserProfileScreen extends StatefulWidget {
 
 class __UserProfileScreenState extends State<_UserProfileScreen> {
   TextEditingController controller = TextEditingController();
+  String? iconUrl;
+  bool selecting = false;
+  File? imageFileHolder;
 
   @override
   void initState() {
     controller.text = widget.user.email;
+    iconUrl = widget.user.imageUrl;
     super.initState();
   }
 
@@ -105,11 +113,29 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   iconSize: 95,
-                  icon: UserIcon(
-                    url: widget.user.imageUrl,
-                    size: 95,
-                  ),
-                  onPressed: null,
+                  icon: selecting
+                      ? CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: Image.file(
+                            File(iconUrl!),
+                            fit: BoxFit.cover,
+                          ).image)
+                      : UserIcon(
+                          url: iconUrl,
+                          size: 95,
+                        ),
+                  onPressed: () async {
+                    final picker = ImagePicker();
+                    var imageXFile = await picker.pickImage(source: ImageSource.gallery);
+                    if (imageXFile == null) return;
+                    final imageFile = File(imageXFile.path);
+                    setState(() {
+                      selecting = true;
+                      iconUrl = imageFile.path;
+                      imageFileHolder = imageFile;
+                    });
+                  },
                 ),
               ),
             ),
@@ -141,8 +167,14 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
                 ),
               ),
               onPressed: () {
-                if (controller.text != widget.user.email) {
-                  provider.updateUser(controller.text);
+                if (controller.text != widget.user.email && !selecting) {
+                  provider.updateUserEmail(controller.text);
+                }
+                if (selecting && controller.text == widget.user.email) {
+                  provider.updateUser(null, imageFileHolder!);
+                }
+                if (selecting && controller.text != widget.user.email) {
+                  provider.updateUser(controller.text, imageFileHolder!);
                 }
               },
             ),
