@@ -13,4 +13,8 @@ class UserProfileProvider extends RequestProvider<void> {
   User get getUser {
     return _storage.getUser;
   }
+
+  void updateUser(String email) {
+    executeRequest(requestBuilder: (() => _repository.updateUser(email)));
+  }
 }

@@ -23,7 +23,22 @@ class UserProfileScreen extends StatelessWidget {
         builder: (context, provider) => _UserProfileScreen(user: provider.getUser),
         listener: (context, provider) {
           provider.state.whenOrNull(
-            success: (result) => Navigator.of(context).pop(),
+            success: (result) => showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Ok"))
+                  ],
+                  title: const Text('Success'),
+                  content: const Text("Email has been changed!"),
+                );
+              },
+            ),
             failure: (error) => showDialog(
               context: context,
               builder: (context) {
@@ -72,6 +87,8 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<UserProfileProvider>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
       child: Column(
@@ -111,7 +128,9 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 40, 10, 5),
             child: ElevatedButton(
-              child: const Text('Update', style: TextStyle(color: Color(0xff52368c))),
+              child: provider.state.maybeWhen(
+                  orElse: (() => const Text('Update', style: TextStyle(color: Color(0xff52368c)))),
+                  loading: () => const CircularProgressIndicator(color: Color(0xff52368c))),
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.white),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -121,7 +140,11 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
                   ),
                 ),
               ),
-              onPressed: null,
+              onPressed: () {
+                if (controller.text != widget.user.email) {
+                  provider.updateUser(controller.text);
+                }
+              },
             ),
           ),
           Padding(

@@ -56,4 +56,12 @@ class NetworkingRepository {
   Future<void> submitReview(SubmitReview review) async {
     await _dio.post('/reviews', data: review.toJson());
   }
+
+  Future<User> updateUser(String email) async {
+    final json = {'email': email};
+    final response = await _dio.put('/users', data: json);
+    _storage.setAuthInfo(AuthInfo.fromHeaderMap(response.headers.map));
+    _storage.storeJson(response.data['user'], 'user');
+    return User.fromJson(response.data['user']);
+  }
 }

@@ -16,6 +16,7 @@ class StorageRepository {
   Future<void> storeJson(Map<String, dynamic> json, String key) async {
     final box = await _box;
     await box.put(key, jsonEncode(json));
+    user = User.fromJson(json);
   }
 
   Future<Map<String, dynamic>?> readJson(String key) async {
