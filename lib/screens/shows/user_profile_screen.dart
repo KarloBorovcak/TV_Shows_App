@@ -35,7 +35,10 @@ class UserProfileScreen extends StatelessWidget {
                   actions: [
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ShowsScreen()));
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => const ShowsScreen()),
+                            (route) => false,
+                          );
                         },
                         child: const Text("Ok"))
                   ],
