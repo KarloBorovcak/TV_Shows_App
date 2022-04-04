@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:tv_shows/models/register_info.dart';
 import 'package:tv_shows/models/review.dart';
 import 'package:tv_shows/models/signin_info.dart';
 import 'package:tv_shows/models/submit_review.dart';
+import 'package:tv_shows/models/update_user.dart';
 import 'package:tv_shows/utilities/auth_info.dart';
 import 'package:tv_shows/utilities/storage_repository.dart';
 import 'package:tv_shows/utilities/auth_info_interceptor.dart';
@@ -59,19 +58,13 @@ class NetworkingRepository {
     await _dio.post('/reviews', data: review.toJson());
   }
 
-  Future<User> updateUserEmail(String email) async {
-    final json = {'email': email};
-    final response = await _dio.put(
-      '/users',
-      data: json,
-    );
-    _storage.setAuthInfo(AuthInfo.fromHeaderMap(response.headers.map));
-    _storage.storeJson(response.data['user'], 'user');
-    return User.fromJson(response.data['user']);
-  }
-
-  Future<User> updateUserImage(File imageFile) async {
-    FormData formData = FormData.fromMap({'image': await MultipartFile.fromFile(imageFile.path)});
+  Future<User> updateUser(UpdateUser userInfo) async {
+    MultipartFile? image;
+    String? imagePath = userInfo.imageUrl;
+    if (imagePath != null) {
+      image = await MultipartFile.fromFile(imagePath);
+    }
+    FormData formData = FormData.fromMap({'image': image, 'email': userInfo.email});
     final response = await _dio.put('/users', data: formData);
     _storage.setAuthInfo(AuthInfo.fromHeaderMap(response.headers.map));
     _storage.storeJson(response.data['user'], 'user');

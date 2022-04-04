@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tv_shows/models/update_user.dart';
 import 'package:tv_shows/providers/provider_listener.dart';
 import 'package:tv_shows/providers/user_profile_provider.dart';
 import 'package:tv_shows/screens/login/login_screen.dart';
@@ -78,7 +79,6 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
   TextEditingController controller = TextEditingController();
   String? iconUrl;
   bool selecting = false;
-  File? imageFileHolder;
 
   @override
   void initState() {
@@ -129,11 +129,10 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
                     final picker = ImagePicker();
                     var imageXFile = await picker.pickImage(source: ImageSource.gallery);
                     if (imageXFile == null) return;
-                    final imageFile = File(imageXFile.path);
+
                     setState(() {
                       selecting = true;
-                      iconUrl = imageFile.path;
-                      imageFileHolder = imageFile;
+                      iconUrl = imageXFile.path;
                     });
                   },
                 ),
@@ -167,14 +166,8 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
                 ),
               ),
               onPressed: () {
-                if (controller.text != widget.user.email && !selecting) {
-                  provider.updateUserEmail(controller.text);
-                }
-                if (selecting && controller.text == widget.user.email) {
-                  provider.updateUser(null, imageFileHolder!);
-                }
-                if (selecting && controller.text != widget.user.email) {
-                  provider.updateUser(controller.text, imageFileHolder!);
+                if (controller.text != widget.user.email || selecting) {
+                  provider.updateUser(UpdateUser(controller.text, selecting ? iconUrl : null));
                 }
               },
             ),

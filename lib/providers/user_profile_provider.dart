@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:tv_shows/models/update_user.dart';
 import 'package:tv_shows/providers/request_provider.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
 import 'package:tv_shows/utilities/storage_repository.dart';
@@ -16,18 +15,9 @@ class UserProfileProvider extends RequestProvider<void> {
     return _storage.getUser;
   }
 
-  void updateUserEmail(String email) async {
-    executeRequest(requestBuilder: () async => await _repository.updateUserEmail(email));
-  }
-
-  void updateUser(String? email, File imageFile) async {
-    if (email == null) {
-      executeRequest(requestBuilder: () async => await _repository.updateUserImage(imageFile));
-    } else {
-      executeRequest(requestBuilder: () async {
-        await _repository.updateUserEmail(email);
-        await _repository.updateUserImage(imageFile);
-      });
-    }
+  void updateUser(UpdateUser user) async {
+    executeRequest(requestBuilder: () async {
+      await _repository.updateUser(user);
+    });
   }
 }

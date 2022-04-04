@@ -6,6 +6,8 @@ import 'package:tv_shows/utilities/auth_info.dart';
 
 import '../models/user.dart';
 
+const _accessToken = 'accessToken';
+
 class StorageRepository {
   static Future<void> initialize() async {
     await Hive.initFlutter();
@@ -50,7 +52,7 @@ class StorageRepository {
 
   Future<AuthInfo?> get getAuthInfo async {
     if (authInfo == null) {
-      var accessToken = await _storage.read(key: 'accessToken');
+      var accessToken = await _storage.read(key: _accessToken);
       var client = await _storage.read(key: 'client');
       var tokenType = await _storage.read(key: 'tokenType');
       var uid = await _storage.read(key: 'uid');
