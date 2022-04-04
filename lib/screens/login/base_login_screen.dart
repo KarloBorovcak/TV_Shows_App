@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:tv_shows/gen/assets.gen.dart';
 import 'package:tv_shows/widgets/login_ui.dart';
 
-class BaseLoginScreen extends StatelessWidget {
+class BaseLoginScreen extends StatefulWidget {
   final String title;
   final String description;
   final String buttonTitle;
@@ -23,6 +23,33 @@ class BaseLoginScreen extends StatelessWidget {
       required this.buttonPressed,
       required this.showOtherButtonPressed})
       : super(key: key);
+
+  @override
+  State<BaseLoginScreen> createState() => _BaseLoginScreenState();
+}
+
+class _BaseLoginScreenState extends State<BaseLoginScreen> with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+  late final Animation<Offset> _animation;
+
+  @override
+  void initState() {
+    controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 800))..repeat(reverse: true);
+    _animation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(0.0, 0.25),
+    ).animate(CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeInOut,
+    ));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +84,24 @@ class BaseLoginScreen extends StatelessWidget {
                       child: SvgPicture.asset(Assets.images.topRightIllustration.path),
                     ),
                     Positioned(
-                      child: SvgPicture.asset(Assets.images.logoHorizontalWhite.path),
+                      child: SlideTransition(
+                        position: _animation,
+                        child: SvgPicture.asset(Assets.images.logoHorizontalWhite.path),
+                      ),
                       top: 180,
                       left: 40,
-                    )
+                    ),
                   ],
                 ),
               ),
               LoginUI(
-                  title: title,
-                  description: description,
-                  buttonTitle: buttonTitle,
-                  isLoading: isLoading,
-                  showOtherButtonTitle: showOtherButtonTitle,
-                  buttonPressed: buttonPressed,
-                  showOtherButtonPressed: showOtherButtonPressed),
+                  title: widget.title,
+                  description: widget.description,
+                  buttonTitle: widget.buttonTitle,
+                  isLoading: widget.isLoading,
+                  showOtherButtonTitle: widget.showOtherButtonTitle,
+                  buttonPressed: widget.buttonPressed,
+                  showOtherButtonPressed: widget.showOtherButtonPressed),
             ],
           ),
         ),
