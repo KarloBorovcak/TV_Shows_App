@@ -123,7 +123,7 @@ class _WriteReviewScreenState extends State<_WriteReviewScreen> {
             child: TextField(
               controller: controller,
               keyboardType: TextInputType.multiline,
-              maxLines: null,
+              maxLines: 6,
               decoration: const InputDecoration(
                   enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff3d1d72))),
                   focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff3d1d72))),

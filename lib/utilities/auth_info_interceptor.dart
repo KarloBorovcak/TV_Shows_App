@@ -1,14 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:tv_shows/utilities/auth_info_holder.dart';
+import 'package:tv_shows/utilities/storage_repository.dart';
 
 class AuthInfoInterceptor extends Interceptor {
-  AuthInfoHolder authInfoHolder;
+  StorageRepository authInfoHolder;
   AuthInfoInterceptor(this.authInfoHolder);
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (authInfoHolder.authInfo != null) {
-      options.headers.addAll(authInfoHolder.authInfo!.toHeaders());
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    var authInfo = await authInfoHolder.getAuthInfo;
+    if (authInfo != null) {
+      options.headers.addAll(authInfo.toHeaders());
     }
     super.onRequest(options, handler);
   }

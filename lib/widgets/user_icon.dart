@@ -1,16 +1,26 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tv_shows/gen/assets.gen.dart';
 
 class UserIcon extends StatelessWidget {
-  const UserIcon({Key? key, required this.url}) : super(key: key);
+  const UserIcon({Key? key, this.url, this.size}) : super(key: key);
 
-  final String url;
+  final String? url;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: 25,
-      backgroundColor: Colors.transparent,
-      backgroundImage: NetworkImage(url),
-    );
+    return url == null
+        ? Image.asset(
+            Assets.images.icProfilePlaceholder.path,
+            height: size ?? 50,
+            width: size ?? 50,
+            fit: BoxFit.cover,
+          )
+        : CircleAvatar(
+            radius: size ?? 25,
+            backgroundColor: Colors.transparent,
+            backgroundImage: CachedNetworkImageProvider(url!),
+          );
   }
 }
