@@ -9,6 +9,24 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
 
+class $AssetsAnimationsGen {
+  const $AssetsAnimationsGen();
+
+  /// File path: assets/animations/success.json
+  String get success => 'assets/animations/success.json';
+
+  /// File path: assets/animations/welcome.json
+  String get welcome => 'assets/animations/welcome.json';
+}
+
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/Icon-1024-1.png
+  AssetGenImage get icon10241 =>
+      const AssetGenImage('assets/icons/Icon-1024-1.png');
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
@@ -52,6 +70,10 @@ class $AssetsImagesGen {
   AssetGenImage get krvNijeVoda2 =>
       const AssetGenImage('assets/images/krv_nije_voda_2.png');
 
+  /// File path: assets/images/splash-logo.png
+  AssetGenImage get splashLogo =>
+      const AssetGenImage('assets/images/splash-logo.png');
+
   /// File path: assets/images/stranger_things_poster 2.png
   AssetGenImage get strangerThingsPoster2 =>
       const AssetGenImage('assets/images/stranger_things_poster 2.png');
@@ -64,6 +86,8 @@ class $AssetsImagesGen {
 class Assets {
   Assets._();
 
+  static const $AssetsAnimationsGen animations = $AssetsAnimationsGen();
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 

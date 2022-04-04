@@ -30,10 +30,30 @@ class ShowDetailScreen extends StatelessWidget {
   }
 }
 
-class _ShowDetailScreen extends StatelessWidget {
+class _ShowDetailScreen extends StatefulWidget {
   const _ShowDetailScreen({Key? key, required this.show, required this.widget}) : super(key: key);
   final Show show;
   final Widget? widget;
+
+  @override
+  State<_ShowDetailScreen> createState() => _ShowDetailScreenState();
+}
+
+class _ShowDetailScreenState extends State<_ShowDetailScreen> with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    controller = AnimationController(vsync: this, duration: const Duration(seconds: 1));
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +71,12 @@ class _ShowDetailScreen extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                show.title,
+                widget.show.title,
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
               ),
               background: Hero(
-                tag: show.id,
-                child: CachedNetworkImage(imageUrl: show.imageUrl, fit: BoxFit.cover),
+                tag: widget.show.id,
+                child: CachedNetworkImage(imageUrl: widget.show.imageUrl, fit: BoxFit.cover),
               ),
             ),
           ),
@@ -64,7 +84,7 @@ class _ShowDetailScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(26, 20, 26, 0),
               child: Text(
-                show.description,
+                widget.show.description,
                 style: const TextStyle(color: Colors.black, fontSize: 17),
               ),
             ),
@@ -82,7 +102,7 @@ class _ShowDetailScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 6),
               child: Text(
-                '${show.noOfReviews} REVIEWS, ${show.averageRating} AVERAGE',
+                '${widget.show.noOfReviews} REVIEWS, ${widget.show.averageRating} AVERAGE',
                 textAlign: TextAlign.start,
                 style: const TextStyle(color: Color(0xff999999), fontSize: 14),
               ),
@@ -97,12 +117,12 @@ class _ShowDetailScreen extends StatelessWidget {
                   color: Color(0xff52368c),
                 ),
                 itemSize: 24,
-                rating: show.averageRating,
+                rating: widget.show.averageRating,
                 unratedColor: Color.lerp(Colors.white, const Color(0xff52368c), 0.3),
               ),
             ),
           ),
-          widget == null
+          widget.widget == null
               ? SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
                     return Column(
@@ -118,7 +138,7 @@ class _ShowDetailScreen extends StatelessWidget {
                     );
                   }, childCount: reviewsArray.length),
                 )
-              : SliverToBoxAdapter(child: widget)
+              : SliverToBoxAdapter(child: widget.widget)
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -139,7 +159,7 @@ class _ShowDetailScreen extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 builder: (_) => ChangeNotifierProvider<ReviewProvider>.value(
-                    value: context.read<ReviewProvider>(), child: WriteReviewScreen(showId: show.id)),
+                    value: context.read<ReviewProvider>(), child: WriteReviewScreen(showId: widget.show.id)),
                 backgroundColor: Colors.white,
                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
                 isScrollControlled: true,
