@@ -54,7 +54,10 @@ class _ShowDetailScreen extends StatelessWidget {
                 show.title,
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
               ),
-              background: CachedNetworkImage(imageUrl: show.imageUrl, fit: BoxFit.cover),
+              background: Hero(
+                tag: show.id,
+                child: CachedNetworkImage(imageUrl: show.imageUrl, fit: BoxFit.cover),
+              ),
             ),
           ),
           SliverToBoxAdapter(
