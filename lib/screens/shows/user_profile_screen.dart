@@ -78,13 +78,17 @@ class _UserProfileScreen extends StatefulWidget {
   State<_UserProfileScreen> createState() => __UserProfileScreenState();
 }
 
-class __UserProfileScreenState extends State<_UserProfileScreen> {
+class __UserProfileScreenState extends State<_UserProfileScreen> with SingleTickerProviderStateMixin {
   TextEditingController controller = TextEditingController();
+  late AnimationController animationController;
+  late Animation<double> rotate;
   String? iconUrl;
   bool selecting = false;
 
   @override
   void initState() {
+    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    rotate = CurvedAnimation(parent: animationController, curve: Curves.linear);
     controller.text = widget.user.email;
     iconUrl = widget.user.imageUrl;
     super.initState();
@@ -93,7 +97,13 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
   @override
   void dispose() {
     controller.dispose();
+    animationController.dispose();
     super.dispose();
+  }
+
+  void rotateImage() async {
+    await animationController.forward();
+    animationController.reset();
   }
 
   @override
@@ -117,13 +127,15 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
                   padding: EdgeInsets.zero,
                   iconSize: 95,
                   icon: selecting
-                      ? CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: Image.file(
-                            File(iconUrl!),
-                            fit: BoxFit.cover,
-                          ).image)
+                      ? RotationTransition(
+                          turns: rotate,
+                          child: CircleAvatar(
+                              radius: 50,
+                              backgroundColor: Colors.transparent,
+                              backgroundImage: Image.file(
+                                File(iconUrl!),
+                                fit: BoxFit.cover,
+                              ).image))
                       : UserIcon(
                           url: iconUrl,
                           size: 95,
@@ -132,7 +144,7 @@ class __UserProfileScreenState extends State<_UserProfileScreen> {
                     final picker = ImagePicker();
                     var imageXFile = await picker.pickImage(source: ImageSource.gallery);
                     if (imageXFile == null) return;
-
+                    rotateImage();
                     setState(() {
                       selecting = true;
                       iconUrl = imageXFile.path;
