@@ -6,7 +6,6 @@ import 'package:tv_shows/models/update_user.dart';
 import 'package:tv_shows/providers/provider_listener.dart';
 import 'package:tv_shows/providers/user_profile_provider.dart';
 import 'package:tv_shows/screens/login/login_screen.dart';
-import 'package:tv_shows/screens/shows/shows_screen.dart';
 import 'package:tv_shows/utilities/networking_repository.dart';
 import 'package:tv_shows/utilities/storage_repository.dart';
 import 'package:tv_shows/widgets/user_icon.dart';
@@ -28,25 +27,6 @@ class UserProfileScreen extends StatelessWidget {
         builder: (context, provider) => _UserProfileScreen(user: provider.getUser),
         listener: (context, provider) {
           provider.state.whenOrNull(
-            success: (result) => showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => const ShowsScreen()),
-                            (route) => false,
-                          );
-                        },
-                        child: const Text("Ok"))
-                  ],
-                  title: const Text('Success'),
-                  content: const Text("Profile has been updated!"),
-                );
-              },
-            ),
             failure: (error) => showDialog(
               context: context,
               builder: (context) {
@@ -78,17 +58,22 @@ class _UserProfileScreen extends StatefulWidget {
   State<_UserProfileScreen> createState() => __UserProfileScreenState();
 }
 
-class __UserProfileScreenState extends State<_UserProfileScreen> with SingleTickerProviderStateMixin {
+class __UserProfileScreenState extends State<_UserProfileScreen> with TickerProviderStateMixin {
   TextEditingController controller = TextEditingController();
-  late AnimationController animationController;
+  late AnimationController animationRotationController;
+  late AnimationController animationScaleController;
   late Animation<double> rotate;
+  late Animation<double> scale;
   String? iconUrl;
   bool selecting = false;
 
   @override
   void initState() {
-    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
-    rotate = CurvedAnimation(parent: animationController, curve: Curves.linear);
+    animationRotationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
+    animationScaleController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    rotate = CurvedAnimation(parent: animationRotationController, curve: Curves.linear);
+    scale = CurvedAnimation(parent: animationScaleController, curve: Curves.easeIn)
+        .drive(Tween<double>(begin: 0, end: 1.2));
     controller.text = widget.user.email;
     iconUrl = widget.user.imageUrl;
     super.initState();
@@ -97,18 +82,30 @@ class __UserProfileScreenState extends State<_UserProfileScreen> with SingleTick
   @override
   void dispose() {
     controller.dispose();
-    animationController.dispose();
+    animationRotationController.dispose();
+    animationScaleController.dispose();
     super.dispose();
   }
 
   void rotateImage() async {
-    await animationController.forward();
-    animationController.reset();
+    await animationRotationController.forward();
+    animationRotationController.reset();
+  }
+
+  void scaleImage() async {
+    await animationScaleController.forward();
+    await animationScaleController.reverse();
+    animationScaleController.reset();
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<UserProfileProvider>();
+
+    provider.state.whenOrNull(success: (result) {
+      scaleImage();
+      Future.delayed(const Duration(milliseconds: 600), () => Navigator.of(context).pop(iconUrl));
+    });
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -126,20 +123,32 @@ class __UserProfileScreenState extends State<_UserProfileScreen> with SingleTick
                 child: IconButton(
                   padding: EdgeInsets.zero,
                   iconSize: 95,
-                  icon: selecting
-                      ? RotationTransition(
-                          turns: rotate,
-                          child: CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.transparent,
-                              backgroundImage: Image.file(
-                                File(iconUrl!),
-                                fit: BoxFit.cover,
-                              ).image))
-                      : UserIcon(
-                          url: iconUrl,
-                          size: 95,
-                        ),
+                  icon: provider.state.maybeWhen(
+                    success: (result) => ScaleTransition(
+                      scale: scale,
+                      child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: Image.file(
+                            File(iconUrl!),
+                            fit: BoxFit.cover,
+                          ).image),
+                    ),
+                    orElse: () => selecting
+                        ? RotationTransition(
+                            turns: rotate,
+                            child: CircleAvatar(
+                                radius: 50,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: Image.file(
+                                  File(iconUrl!),
+                                  fit: BoxFit.cover,
+                                ).image))
+                        : UserIcon(
+                            url: iconUrl,
+                            size: 95,
+                          ),
+                  ),
                   onPressed: () async {
                     final picker = ImagePicker();
                     var imageXFile = await picker.pickImage(source: ImageSource.gallery);
