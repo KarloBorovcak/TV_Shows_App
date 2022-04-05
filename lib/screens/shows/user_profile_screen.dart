@@ -124,16 +124,24 @@ class __UserProfileScreenState extends State<_UserProfileScreen> with TickerProv
                   padding: EdgeInsets.zero,
                   iconSize: 95,
                   icon: provider.state.maybeWhen(
-                    success: (result) => ScaleTransition(
-                      scale: scale,
-                      child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.transparent,
-                          backgroundImage: Image.file(
-                            File(iconUrl!),
-                            fit: BoxFit.cover,
-                          ).image),
-                    ),
+                    success: (result) => selecting
+                        ? ScaleTransition(
+                            scale: scale,
+                            child: CircleAvatar(
+                                radius: 50,
+                                backgroundColor: Colors.transparent,
+                                backgroundImage: Image.file(
+                                  File(iconUrl!),
+                                  fit: BoxFit.cover,
+                                ).image),
+                          )
+                        : ScaleTransition(
+                            scale: scale,
+                            child: UserIcon(
+                              url: iconUrl,
+                              size: 95,
+                            ),
+                          ),
                     orElse: () => selecting
                         ? RotationTransition(
                             turns: rotate,

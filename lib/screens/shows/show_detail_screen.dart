@@ -48,7 +48,7 @@ class _ShowDetailScreenState extends State<_ShowDetailScreen> with SingleTickerP
 
   @override
   void initState() {
-    controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1700));
+    controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
     opacity = CurvedAnimation(parent: controller, curve: const Interval(0, 0.4)).drive(Tween<double>(begin: 0, end: 1));
 
     opacityReviews =
