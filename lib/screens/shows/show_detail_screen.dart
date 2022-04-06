@@ -30,10 +30,45 @@ class ShowDetailScreen extends StatelessWidget {
   }
 }
 
-class _ShowDetailScreen extends StatelessWidget {
+class _ShowDetailScreen extends StatefulWidget {
   const _ShowDetailScreen({Key? key, required this.show, required this.widget}) : super(key: key);
   final Show show;
   final Widget? widget;
+
+  @override
+  State<_ShowDetailScreen> createState() => _ShowDetailScreenState();
+}
+
+class _ShowDetailScreenState extends State<_ShowDetailScreen> with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+  late final Animation<double> opacity;
+  late final Animation<double> opacityReviews;
+  late final Animation<Offset> slideRight;
+  late final Animation<Offset> slideDown;
+
+  @override
+  void initState() {
+    controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200));
+    opacity = CurvedAnimation(parent: controller, curve: const Interval(0, 0.4)).drive(Tween<double>(begin: 0, end: 1));
+
+    opacityReviews =
+        CurvedAnimation(parent: controller, curve: const Interval(0.3, 0.7)).drive(Tween<double>(begin: 0, end: 1));
+
+    slideRight = CurvedAnimation(parent: controller, curve: const Interval(0, 0.4))
+        .drive(Tween<Offset>(begin: const Offset(1.5, 0), end: Offset.zero));
+
+    slideDown = CurvedAnimation(parent: controller, curve: const Interval(0.6, 1))
+        .drive(Tween<Offset>(begin: const Offset(0, 1.5), end: Offset.zero));
+
+    controller.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,97 +86,113 @@ class _ShowDetailScreen extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                show.title,
+                widget.show.title,
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
               ),
-              background: CachedNetworkImage(imageUrl: show.imageUrl, fit: BoxFit.cover),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(26, 20, 26, 0),
-              child: Text(
-                show.description,
-                style: const TextStyle(color: Colors.black, fontSize: 17),
+              background: Hero(
+                tag: widget.show.id,
+                child: CachedNetworkImage(imageUrl: widget.show.imageUrl, fit: BoxFit.cover),
               ),
             ),
           ),
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(24, 25, 0, 0),
-              child: Text(
-                'Reviews',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 24),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 6),
-              child: Text(
-                '${show.noOfReviews} REVIEWS, ${show.averageRating} AVERAGE',
-                textAlign: TextAlign.start,
-                style: const TextStyle(color: Color(0xff999999), fontSize: 14),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-              child: RatingBarIndicator(
-                itemBuilder: (context, _) => const Icon(
-                  IconData(0xe5f9, fontFamily: 'MaterialIcons'),
-                  color: Color(0xff52368c),
+          SliverFadeTransition(
+            opacity: opacity,
+            sliver: SliverToBoxAdapter(
+              child: SlideTransition(
+                position: slideRight,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(26, 20, 26, 0),
+                  child: Text(
+                    widget.show.description,
+                    style: const TextStyle(color: Colors.black, fontSize: 17),
+                  ),
                 ),
-                itemSize: 24,
-                rating: show.averageRating,
-                unratedColor: Color.lerp(Colors.white, const Color(0xff52368c), 0.3),
               ),
             ),
           ),
-          widget == null
-              ? SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                    return Column(
-                      children: [
-                        ReviewWidget(review: reviewsArray[index]),
-                        if (index != reviewsArray.length - 1)
-                          const Divider(
-                            color: Color(0xffC8C7CC),
-                            indent: 24,
-                            endIndent: 24,
-                          )
-                      ],
-                    );
-                  }, childCount: reviewsArray.length),
+          SliverFadeTransition(
+            opacity: opacityReviews,
+            sliver: SliverToBoxAdapter(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(24, 25, 0, 0),
+                  child: Text(
+                    'Reviews',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 24),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 6),
+                  child: Text(
+                    '${widget.show.noOfReviews} REVIEWS, ${widget.show.averageRating} AVERAGE',
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(color: Color(0xff999999), fontSize: 14),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                  child: RatingBarIndicator(
+                    itemBuilder: (context, _) => const Icon(
+                      IconData(0xe5f9, fontFamily: 'MaterialIcons'),
+                      color: Color(0xff52368c),
+                    ),
+                    itemSize: 24,
+                    rating: widget.show.averageRating,
+                    unratedColor: Color.lerp(Colors.white, const Color(0xff52368c), 0.3),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+          widget.widget == null
+              ? SliverFadeTransition(
+                  opacity: opacityReviews,
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return Column(
+                        children: [
+                          ReviewWidget(review: reviewsArray[index]),
+                          if (index != reviewsArray.length - 1)
+                            const Divider(
+                              color: Color(0xffC8C7CC),
+                              indent: 24,
+                              endIndent: 24,
+                            )
+                        ],
+                      );
+                    }, childCount: reviewsArray.length),
+                  ),
                 )
-              : SliverToBoxAdapter(child: widget)
+              : SliverFadeTransition(opacity: opacityReviews, sliver: SliverToBoxAdapter(child: widget.widget))
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
-          child: ElevatedButton(
-            child: const Text('Write a review', style: TextStyle(color: Colors.white)),
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(const Color(0xff52368c)),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(21.5),
+      bottomNavigationBar: SlideTransition(
+        position: slideDown,
+        child: BottomAppBar(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(25, 15, 25, 15),
+            child: ElevatedButton(
+              child: const Text('Write a review', style: TextStyle(color: Colors.white)),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(const Color(0xff52368c)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(21.5),
+                  ),
                 ),
               ),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (_) => ChangeNotifierProvider<ReviewProvider>.value(
+                      value: context.read<ReviewProvider>(), child: WriteReviewScreen(showId: widget.show.id)),
+                  backgroundColor: Colors.white,
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+                  isScrollControlled: true,
+                );
+              },
             ),
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (_) => ChangeNotifierProvider<ReviewProvider>.value(
-                    value: context.read<ReviewProvider>(), child: WriteReviewScreen(showId: show.id)),
-                backgroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
-                isScrollControlled: true,
-              );
-            },
           ),
         ),
       ),

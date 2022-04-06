@@ -32,12 +32,18 @@ class ShowsScreen extends StatelessWidget {
   }
 }
 
-class _Showscreen extends StatelessWidget {
+class _Showscreen extends StatefulWidget {
+  @override
+  State<_Showscreen> createState() => _ShowscreenState();
+}
+
+class _ShowscreenState extends State<_Showscreen> {
   @override
   Widget build(BuildContext context) {
     final shows = context.watch<ShowsProvider>();
     final showArray = shows.showGetShows;
     final storage = context.read<StorageRepository>();
+    var iconUrl = storage.getUser.imageUrl;
 
     return Scaffold(
       appBar: AppBar(
@@ -46,8 +52,8 @@ class _Showscreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
             child: IconButton(
-              onPressed: () {
-                showModalBottomSheet(
+              onPressed: () async {
+                var imagePath = await showModalBottomSheet(
                   context: context,
                   builder: (_) => UserProfileScreen(
                     repository: context.read<NetworkingRepository>(),
@@ -57,8 +63,11 @@ class _Showscreen extends StatelessWidget {
                   shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
                   isScrollControlled: true,
                 );
+                setState(() {
+                  iconUrl = imagePath;
+                });
               },
-              icon: UserIcon(url: storage.getUser.imageUrl),
+              icon: UserIcon(url: iconUrl),
             ),
           ),
         ],

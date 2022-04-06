@@ -32,9 +32,12 @@ class ShowCard extends StatelessWidget {
             SizedBox(
               height: 190,
               width: 340,
-              child: CachedNetworkImage(
-                imageUrl: showArray[index].imageUrl,
-                fit: BoxFit.cover,
+              child: Hero(
+                tag: showArray[index].id,
+                child: CachedNetworkImage(
+                  imageUrl: showArray[index].imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Padding(
