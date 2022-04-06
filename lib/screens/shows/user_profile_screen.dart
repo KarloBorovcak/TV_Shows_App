@@ -13,12 +13,13 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../models/user.dart';
 
+final GlobalKey<__UserProfileScreenState> _userProfileSate = GlobalKey<__UserProfileScreenState>();
+
 class UserProfileScreen extends StatelessWidget {
-  UserProfileScreen({Key? key, required this.repository, required this.storage}) : super(key: key);
+  const UserProfileScreen({Key? key, required this.repository, required this.storage}) : super(key: key);
 
   final StorageRepository storage;
   final NetworkingRepository repository;
-  final GlobalKey<__UserProfileScreenState> _userProfileSate = GlobalKey<__UserProfileScreenState>();
 
   @override
   Widget build(BuildContext context) {
