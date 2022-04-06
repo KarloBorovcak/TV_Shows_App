@@ -14,19 +14,26 @@ import 'package:image_picker/image_picker.dart';
 import '../../models/user.dart';
 
 class UserProfileScreen extends StatelessWidget {
-  const UserProfileScreen({Key? key, required this.repository, required this.storage}) : super(key: key);
+  UserProfileScreen({Key? key, required this.repository, required this.storage}) : super(key: key);
 
   final StorageRepository storage;
   final NetworkingRepository repository;
+  final GlobalKey<__UserProfileScreenState> _userProfileSate = GlobalKey<__UserProfileScreenState>();
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => UserProfileProvider(repository, storage),
       child: ConsumerListener<UserProfileProvider>(
-        builder: (context, provider) => _UserProfileScreen(user: provider.getUser),
+        builder: (context, provider) => _UserProfileScreen(key: _userProfileSate, user: provider.getUser),
         listener: (context, provider) {
           provider.state.whenOrNull(
+            success: (result) {
+              _userProfileSate.currentState?.scaleImage();
+
+              Future.delayed(const Duration(milliseconds: 600),
+                  () => Navigator.of(context).pop(_userProfileSate.currentState?.iconUrl));
+            },
             failure: (error) => showDialog(
               context: context,
               builder: (context) {
@@ -101,11 +108,6 @@ class __UserProfileScreenState extends State<_UserProfileScreen> with TickerProv
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<UserProfileProvider>();
-
-    provider.state.whenOrNull(success: (result) {
-      scaleImage();
-      Future.delayed(const Duration(milliseconds: 600), () => Navigator.of(context).pop(iconUrl));
-    });
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18),
