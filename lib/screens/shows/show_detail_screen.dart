@@ -19,27 +19,27 @@ class ShowDetailScreen extends StatelessWidget {
       create: ((context) => ReviewProvider(context.read<NetworkingRepository>(), show.id)),
       child: Consumer<ReviewProvider>(
         builder: (context, provider, _) => provider.state.when(
-            initial: () => _ShowDetailScreen(
+            initial: () => ShowDetailScreenWidget(
                 show: show, widget: const Center(child: CircularProgressIndicator(color: Color(0xff52368c)))),
-            loading: () => _ShowDetailScreen(
+            loading: () => ShowDetailScreenWidget(
                 show: show, widget: const Center(child: CircularProgressIndicator(color: Color(0xff52368c)))),
-            success: (result) => _ShowDetailScreen(show: show, widget: null),
-            failure: (error) => _ShowDetailScreen(show: show, widget: Text(error.toString()))),
+            success: (result) => ShowDetailScreenWidget(show: show, widget: null),
+            failure: (error) => ShowDetailScreenWidget(show: show, widget: Text(error.toString()))),
       ),
     );
   }
 }
 
-class _ShowDetailScreen extends StatefulWidget {
-  const _ShowDetailScreen({Key? key, required this.show, required this.widget}) : super(key: key);
+class ShowDetailScreenWidget extends StatefulWidget {
+  const ShowDetailScreenWidget({Key? key, required this.show, required this.widget}) : super(key: key);
   final Show show;
   final Widget? widget;
 
   @override
-  State<_ShowDetailScreen> createState() => _ShowDetailScreenState();
+  State<ShowDetailScreenWidget> createState() => ShowDetailScreenWidgetState();
 }
 
-class _ShowDetailScreenState extends State<_ShowDetailScreen> with SingleTickerProviderStateMixin {
+class ShowDetailScreenWidgetState extends State<ShowDetailScreenWidget> with SingleTickerProviderStateMixin {
   late final AnimationController controller;
   late final Animation<double> opacity;
   late final Animation<double> opacityReviews;

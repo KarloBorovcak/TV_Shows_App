@@ -43,11 +43,13 @@ class ShowCard extends StatelessWidget {
             Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
                 child: Text(showArray[index].title,
+                    key: const ValueKey('showTitle'),
                     style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20))),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 5, 10, 20),
               child: Text(
                 showArray[index].description,
+                key: const ValueKey('showDesc'),
                 style: const TextStyle(color: Color(0x99000000), fontSize: 14, height: 1.6),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,

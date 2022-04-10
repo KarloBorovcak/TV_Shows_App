@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
@@ -14,11 +16,18 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  late Timer timer;
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2),
+    timer = Timer(const Duration(seconds: 2),
         () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const ShowsScreen())));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 
   @override

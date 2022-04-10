@@ -18,13 +18,17 @@ class ReviewWidget extends StatelessWidget {
             width: 200,
             child: Text(
               review.user.email,
+              key: const ValueKey('userEmail'),
               style: const TextStyle(color: Color(0xff52368c)),
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
             ),
           ),
           Row(children: [
-            Text('${review.rating}'),
+            Text(
+              '${review.rating}',
+              key: const ValueKey('reviewRating'),
+            ),
             const Icon(
               IconData(0xe5f9, fontFamily: 'MaterialIcons'),
               color: Color(0xff52368c),

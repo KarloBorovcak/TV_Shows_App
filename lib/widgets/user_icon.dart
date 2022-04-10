@@ -13,6 +13,7 @@ class UserIcon extends StatelessWidget {
     return url == null
         ? Image.asset(
             Assets.images.icProfilePlaceholder.path,
+            key: const ValueKey('placeholderAvatar'),
             height: size ?? 50,
             width: size ?? 50,
             fit: BoxFit.cover,

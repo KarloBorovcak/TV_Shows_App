@@ -23,9 +23,9 @@ void main() {
   testGoldens('ReviewWidget test', (tester) async {
     await loadAppFonts();
 
-    tester.pumpWidgetBuilder(
+    await tester.pumpWidgetBuilder(
       ReviewWidget(
-        review: Review('Ovo je comment', 3, User('1', 'email@gmail.com', ''), '1'),
+        review: Review('Ovo je comment', 3, User('1', 'email@gmail.com', null), '1'),
       ),
     );
 
@@ -35,7 +35,7 @@ void main() {
   testGoldens('NoShows error widget', (tester) async {
     await loadAppFonts();
 
-    tester.pumpWidgetBuilder(const NoShows());
+    await tester.pumpWidgetBuilder(const NoShows());
 
     await screenMatchesGolden(tester, 'NoShowsWidget');
   });
