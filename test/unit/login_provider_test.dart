@@ -11,13 +11,14 @@ import 'login_provider_test.mocks.dart';
 
 @GenerateMocks([NetworkingRepository, User, SignInInfo])
 void main() {
+  final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
+  final LoginProvider loginProvider = LoginProvider(networkingRepository);
+
   test(
     'Login provider executes request successfully',
     () async {
-      final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
       when(networkingRepository.signInUser(any)).thenAnswer((_) async => MockUser());
 
-      final LoginProvider loginProvider = LoginProvider(networkingRepository);
       loginProvider.didSelectLoginUser(MockSignInInfo());
 
       await Future.delayed(const Duration(milliseconds: 10));
@@ -26,10 +27,8 @@ void main() {
   );
 
   test('Login provider executes request and catches error', () async {
-    final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
     when(networkingRepository.signInUser(any)).thenThrow(Error());
 
-    final LoginProvider loginProvider = LoginProvider(networkingRepository);
     loginProvider.didSelectLoginUser(MockSignInInfo());
 
     expect(loginProvider.state is RequestStateFailure, true);
@@ -38,10 +37,8 @@ void main() {
   test(
     'Login provider loading after executing a request',
     () async {
-      final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
       when(networkingRepository.signInUser(any)).thenAnswer((_) async => MockUser());
 
-      final LoginProvider loginProvider = LoginProvider(networkingRepository);
       loginProvider.didSelectLoginUser(MockSignInInfo());
 
       expect(loginProvider.state is RequestStateLoading, true);

@@ -10,13 +10,14 @@ import 'show_provider_test.mocks.dart';
 
 @GenerateMocks([NetworkingRepository, Show])
 void main() {
+  final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
+  final ShowsProvider showProvider = ShowsProvider(networkingRepository);
+
   test(
     'Show provider executes request successfully',
     () async {
-      final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
       when(networkingRepository.fetchShows()).thenAnswer((_) async => <Show>[]);
 
-      final ShowsProvider showProvider = ShowsProvider(networkingRepository);
       showProvider.fetchShows();
 
       await Future.delayed(const Duration(milliseconds: 10));
@@ -25,10 +26,8 @@ void main() {
   );
 
   test('Show provider executes request and catches error', () async {
-    final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
     when(networkingRepository.fetchShows()).thenThrow(Error());
 
-    final ShowsProvider showProvider = ShowsProvider(networkingRepository);
     showProvider.fetchShows();
 
     await Future.delayed(const Duration(milliseconds: 10));
@@ -38,10 +37,8 @@ void main() {
   test(
     'Show provider loading after executing a request',
     () async {
-      final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
       when(networkingRepository.fetchShows()).thenAnswer((_) async => <Show>[]);
 
-      final ShowsProvider showProvider = ShowsProvider(networkingRepository);
       showProvider.fetchShows();
 
       expect(showProvider.state is RequestStateLoading, true);
@@ -49,10 +46,8 @@ void main() {
   );
 
   test('Show provider fetch Show function stores list of Shows', () async {
-    final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
     when(networkingRepository.fetchShows()).thenAnswer((_) async => <Show>[MockShow()]);
 
-    final ShowsProvider showProvider = ShowsProvider(networkingRepository);
     showProvider.fetchShows();
 
     await Future.delayed(const Duration(milliseconds: 10));

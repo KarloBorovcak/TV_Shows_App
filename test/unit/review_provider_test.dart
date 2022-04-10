@@ -10,13 +10,14 @@ import 'review_provider_test.mocks.dart';
 
 @GenerateMocks([NetworkingRepository, Review])
 void main() {
+  final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
+  final ReviewProvider reviewProvider = ReviewProvider(networkingRepository, '');
+
   test(
     'Review provider executes request successfully',
     () async {
-      final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
       when(networkingRepository.fetchReviews(any)).thenAnswer((_) async => <Review>[]);
 
-      final ReviewProvider reviewProvider = ReviewProvider(networkingRepository, '');
       reviewProvider.fetchReviews('');
 
       await Future.delayed(const Duration(milliseconds: 10));
@@ -25,10 +26,8 @@ void main() {
   );
 
   test('Review provider executes request and catches error', () async {
-    final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
     when(networkingRepository.fetchReviews(any)).thenThrow(Error());
 
-    final ReviewProvider reviewProvider = ReviewProvider(networkingRepository, '');
     reviewProvider.fetchReviews('');
 
     await Future.delayed(const Duration(milliseconds: 10));
@@ -38,10 +37,8 @@ void main() {
   test(
     'Review provider loading after executing a request',
     () async {
-      final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
       when(networkingRepository.fetchReviews(any)).thenAnswer((_) async => <Review>[]);
 
-      final ReviewProvider reviewProvider = ReviewProvider(networkingRepository, '');
       reviewProvider.fetchReviews('');
 
       expect(reviewProvider.state is RequestStateLoading, true);
@@ -49,10 +46,8 @@ void main() {
   );
 
   test('Review provider fetch review function stores list of reviews', () async {
-    final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
     when(networkingRepository.fetchReviews(any)).thenAnswer((_) async => <Review>[MockReview()]);
 
-    final ReviewProvider reviewProvider = ReviewProvider(networkingRepository, '');
     reviewProvider.fetchReviews('');
 
     await Future.delayed(const Duration(milliseconds: 10));

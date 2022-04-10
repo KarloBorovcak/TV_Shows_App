@@ -11,13 +11,14 @@ import 'register_provider_test.mocks.dart';
 
 @GenerateMocks([NetworkingRepository, User, RegisterInfo])
 void main() {
+  final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
+  final RegisterProvider registerProvider = RegisterProvider(networkingRepository);
+
   test(
     'Register provider executes request successfully',
     () async {
-      final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
       when(networkingRepository.registerUser(any)).thenAnswer((_) async => MockUser());
 
-      final RegisterProvider registerProvider = RegisterProvider(networkingRepository);
       registerProvider.didSelectRegisterUser(MockRegisterInfo());
 
       await Future.delayed(const Duration(milliseconds: 10));
@@ -26,10 +27,8 @@ void main() {
   );
 
   test('Register provider executes request and catches error', () async {
-    final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
     when(networkingRepository.registerUser(any)).thenThrow(Error());
 
-    final RegisterProvider registerProvider = RegisterProvider(networkingRepository);
     registerProvider.didSelectRegisterUser(MockRegisterInfo());
 
     expect(registerProvider.state is RequestStateFailure, true);
@@ -38,10 +37,8 @@ void main() {
   test(
     'Register loading after executing a request',
     () async {
-      final MockNetworkingRepository networkingRepository = MockNetworkingRepository();
       when(networkingRepository.registerUser(any)).thenAnswer((_) async => MockUser());
 
-      final RegisterProvider registerProvider = RegisterProvider(networkingRepository);
       registerProvider.didSelectRegisterUser(MockRegisterInfo());
 
       expect(registerProvider.state is RequestStateLoading, true);
