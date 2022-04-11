@@ -48,6 +48,8 @@ dependencies:
   hive_flutter: ^1.1.0
   image_picker: ^0.8.4+11
   lottie: ^1.2.2
+  mockito: ^5.1.0
+  golden_toolkit: ^0.13.0
 
 dev_dependencies:
 

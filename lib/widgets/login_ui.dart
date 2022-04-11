@@ -52,6 +52,7 @@ class _LoginUIState extends State<LoginUI> {
       Padding(
         padding: const EdgeInsets.all(14),
         child: TextField(
+          key: const ValueKey('emailTextField'),
           textInputAction: TextInputAction.next,
           style: const TextStyle(color: Colors.white),
           autocorrect: false,
@@ -66,6 +67,7 @@ class _LoginUIState extends State<LoginUI> {
       Padding(
         padding: const EdgeInsets.fromLTRB(14, 14, 14, 14),
         child: TextField(
+          key: const ValueKey('passwordTextField'),
           textInputAction: TextInputAction.done,
           style: const TextStyle(color: Colors.white),
           autocorrect: false,
