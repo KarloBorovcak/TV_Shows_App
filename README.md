@@ -1,16 +1,28 @@
-# tv_shows
+Infinum Academy Flutter App
 
-A new Flutter project.
+This is a Flutter app that was created as a part of the Infinum Academy. The app allows you to browse a list of shows, register a user, and write reviews for the shows.
+Getting Started
 
-## Getting Started
+To get started with the app, you will need to have Flutter installed on your computer. If you don't have Flutter installed, you can follow the instructions on the Flutter website to install it.
 
-This project is a starting point for a Flutter application.
+Once you have Flutter installed, you can clone this repository and run the app using the following commands:
 
-A few resources to get you started if this is your first Flutter project:
+bash
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+git clone https://github.com/<username>/infinum-academy-flutter-app.git
+cd infinum-academy-flutter-app
+flutter run
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Features
+
+    Browse a list of shows
+    Register a user
+    Write reviews for shows
+
+Dependencies
+
+The app uses the following dependencies:
+
+    flutter_bloc: For state management
+    http: For making HTTP requests to the server
+    shared_preferences: For storing user data locally
